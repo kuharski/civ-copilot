@@ -1,3 +1,4 @@
+import Tech from "../../models/Tech.js";
 import Building from "../../models/Building.js"
 import buildUrl from "../utils/buildUrl.js";
 import fetchJson from "../utils/fetchJson.js";
@@ -28,8 +29,23 @@ export default async function ingestBuildings() {
                 }    
             };
 
+            // always fill info first if only one field is available
+            if(data.game_info == null && data.strategy == null) {
+               if(buildingDoc.prereqTech) {
+                const tech = await Tech.findOne({name: buildingDoc.prereqTech});
+                buildingDoc.info = data.name + " is a basic building available in the " + tech.era + ".";
+               } else {
+                buildingDoc.info = data.name + " is a basic building available in the Ancient Era.";
+               }
+               
+            }
+            else if (data.game_info == null && data.strategy != null){
+               buildingDoc.info = buildingDoc.strategy;
+               buildingDoc.strategy = null;
+            }
+
             await Building.updateOne({"name": buildingDoc.name}, {$set: buildingDoc}, {upsert: true});
-            console.log(`ingested ${buildingDoc.name}`)
+            //console.log(`ingested ${buildingDoc.info}`)
         }
 
     } catch (err) {

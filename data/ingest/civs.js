@@ -48,7 +48,7 @@ export default async function ingestCivs() {
             };
 
             await Civilization.updateOne({"civ.name": civDoc.civ.name}, {$set: civDoc}, {upsert: true});
-            console.log(`ingested ${civDoc.civ.name}`)
+            //console.log(`ingested ${civDoc.civ.name}`)
         }
 
     } catch (err){

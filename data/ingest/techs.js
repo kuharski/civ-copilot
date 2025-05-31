@@ -22,7 +22,7 @@ export default async function ingestTechs() {
             };
 
             await Tech.updateOne({"name": techDoc.name}, {$set: techDoc}, {upsert: true});
-            console.log(`ingested ${techDoc.name}`)
+            //console.log(`ingested ${techDoc.name}`)
         }
 
     } catch (err){

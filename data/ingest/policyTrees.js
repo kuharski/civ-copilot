@@ -26,7 +26,7 @@ export default async function ingestPolicyTrees() {
 
         for (const tree of treeMap.values()) {
             await PolicyTree.updateOne({"name": tree.name}, {$set: tree}, {upsert: true});
-            console.log(`ingested ${tree.name}`);
+            //console.log(`ingested ${tree.name}`);
         }
 
     } catch (err){

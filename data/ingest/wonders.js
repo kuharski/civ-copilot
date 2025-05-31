@@ -29,7 +29,7 @@ export default async function ingestWonders() {
             };
 
             await Wonder.updateOne({"name": wonderDoc.name}, {$set: wonderDoc}, {upsert: true});
-            console.log(`ingested ${wonderDoc.name}`)
+            //console.log(`ingested ${wonderDoc.name}`)
         }
 
     } catch (err) {
