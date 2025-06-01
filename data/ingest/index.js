@@ -12,8 +12,8 @@ import enrichStrats from "./stratEnrichment.js";
 async function main() {
   // connect
   await mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('mongo connected'))
-    .catch((err) => console.error('mongo error connecting:', err));
+    .then(() => console.log("mongo connected"))
+    .catch((err) => console.error("mongo error connecting:", err));
 
   // load data - must ingest techs first (buildings and units rely on it)
   await ingestTechs();
@@ -25,8 +25,8 @@ async function main() {
   await enrichStrats();
   // disconnect
   await mongoose.disconnect()
-    .then(() => console.log('mongo disconnected'))
-    .catch((err) => console.error('mongo error disconnecting:', err));
+    .then(() => console.log("mongo disconnected"))
+    .catch((err) => console.error("mongo error disconnecting:", err));
 }
 
 main();
