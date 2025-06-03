@@ -4,6 +4,7 @@ const validVictoryTypes = ["Domination", "Science", "Diplomatic", "Cultural"];
 const CivilizationSchema = new mongoose.Schema({
   civ: {
     name: String,
+    slug: String,
     icon: String,
     uniqueBuildings: [String],
     uniqueUnits: [String],

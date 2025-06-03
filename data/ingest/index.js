@@ -16,13 +16,13 @@ async function main() {
     .catch((err) => console.error("mongo error connecting:", err));
 
   // load data - must ingest techs first (buildings and units rely on it)
-  await ingestTechs();
-  await ingestCivs();
-  await ingestBuildings();
-  await ingestWonders();
-  await ingestPolicyTrees();
-  await ingestUnits();
-  await enrichStrats();
+  // await ingestTechs();
+  // await ingestCivs();
+  // await ingestBuildings();
+  // await ingestWonders();
+  // await ingestPolicyTrees();
+  // await ingestUnits();
+  // await enrichStrats();
   // disconnect
   await mongoose.disconnect()
     .then(() => console.log("mongo disconnected"))

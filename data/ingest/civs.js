@@ -21,9 +21,12 @@ export default async function ingestCivs() {
         
         for (const civData of civList) {
 
+            const civSlug = civData.name.toLowerCase().trim().split(" ").pop();
+
             const civDoc = {
                 civ: {
                     name: civData.name,
+                    slug: civSlug,
                     icon: civData.icon,
                     uniqueUnits: civData.unique_units.map(unit => unit.name),
                     uniqueBuildings: civData.unique_buildings.map(building => building.name),
