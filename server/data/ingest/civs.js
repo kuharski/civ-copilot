@@ -3,13 +3,13 @@ import buildUrl from "../utils/buildUrl.js";
 import fetchJson from "../utils/fetchJson.js";
 
 function deduplicateHistory(entries = []) {
-  const seen = new Set();
-  return entries.filter(entry => {
-    const key = `${entry.heading}:${entry.text}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+    const seen = new Set();
+    return entries.filter(entry => {
+        const key = `${entry.heading}:${entry.text}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
 }
 
 export default async function ingestCivs() {
@@ -18,7 +18,7 @@ export default async function ingestCivs() {
         console.log("ingesting civilizations")
         const civsUrl = buildUrl("civilizations", "civilizations");
         const civList = await fetchJson(civsUrl);
-        
+
         for (const civData of civList) {
 
             const civSlug = civData.name.toLowerCase().trim().split(" ").pop();
@@ -50,11 +50,11 @@ export default async function ingestCivs() {
                 }
             };
 
-            await Civilization.updateOne({"civ.name": civDoc.civ.name}, {$set: civDoc}, {upsert: true});
+            await Civilization.updateOne({ "civ.name": civDoc.civ.name }, { $set: civDoc }, { upsert: true });
             //console.log(`ingested ${civDoc.civ.name}`)
         }
 
-    } catch (err){
+    } catch (err) {
         console.error("error in ingestCivs: ", err);
     }
 }

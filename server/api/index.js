@@ -14,11 +14,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('mongo connected'))
   .catch((err) => console.error('mongo error:', err));
 
-app.get('/', (req, res) => {
-  res.status(200).json({ status: 'Civ Copilot API is running' });
-});
-
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   let healthy = true;
 
   if (!mongoose.connection.readyState) {
@@ -26,9 +22,9 @@ app.get('/health', (req, res) => {
   }
 
   if (healthy) {
-    res.status(200).json({ status: 'db connected', timestamp: new Date().toLocaleString() });
+    res.status(200).json({ status: 'Civ Copilot API is running', mongoStatus: 'db is connected', timestamp: new Date().toLocaleString() });
   } else {
-    res.status(503).json({ status: 'db disconnected', timestamp: new Date().toLocaleString() });
+    res.status(503).json({ status: 'Civ Copilot API is running', mongoStatus: 'db is disconnected', timestamp: new Date().toLocaleString() });
   }
 });
 

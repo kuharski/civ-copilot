@@ -8,7 +8,7 @@ export default async function ingestTechs() {
         console.log("ingesting techs")
         const techsUrl = buildUrl("tech", "technologies");
         const techsList = await fetchJson(techsUrl);
-        
+
         for (const data of techsList) {
 
             const techDoc = {
@@ -21,11 +21,11 @@ export default async function ingestTechs() {
                 buildingUnlocks: data.building_unlocks.map(unlock => unlock.name),
             };
 
-            await Tech.updateOne({"name": techDoc.name}, {$set: techDoc}, {upsert: true});
+            await Tech.updateOne({ "name": techDoc.name }, { $set: techDoc }, { upsert: true });
             //console.log(`ingested ${techDoc.name}`)
         }
 
-    } catch (err){
+    } catch (err) {
         console.error("error in ingestTechs: ", err);
     }
 }

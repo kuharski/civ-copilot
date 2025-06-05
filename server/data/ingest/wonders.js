@@ -25,10 +25,10 @@ export default async function ingestWonders() {
                     food: data.yields?.food ?? null,
                     faith: data.yields?.faith ?? null,
                     happiness: data.yields?.happiness ?? null
-                }    
+                }
             };
 
-            await Wonder.updateOne({"name": wonderDoc.name}, {$set: wonderDoc}, {upsert: true});
+            await Wonder.updateOne({ "name": wonderDoc.name }, { $set: wonderDoc }, { upsert: true });
             //console.log(`ingested ${wonderDoc.name}`)
         }
 

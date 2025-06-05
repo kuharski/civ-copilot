@@ -7,8 +7,8 @@ import Building from "../../models/Building.js"
 import OpenAI from "openai";
 import { parseNullDef } from "openai/_vendor/zod-to-json-schema/index.mjs";
 const client = new OpenAI({
-  apiKey: process.env.AI_API_KEY,
-  baseURL: "https://api.fireworks.ai/inference/v1"
+    apiKey: process.env.AI_API_KEY,
+    baseURL: "https://api.fireworks.ai/inference/v1"
 });
 
 export default async function enrichStrats() {
@@ -99,17 +99,17 @@ export default async function enrichStrats() {
                     }
                 ]
             });
-            
+
             let strategy;
             let retries = 0;
             let maxRetries = 5;
-            while(retries < maxRetries) {
+            while (retries < maxRetries) {
                 try {
                     strategy = JSON.parse(response.choices[0].message.content);
                     break;
                 } catch (err) {
                     retries++;
-                    if(retries < maxRetries) {
+                    if (retries < maxRetries) {
                         response = await client.chat.completions.create({
                             "model": "accounts/fireworks/models/llama-v3p1-8b-instruct",
                             "temperature": 0.5,
@@ -166,7 +166,7 @@ export default async function enrichStrats() {
                 counter: strategy.counter
             };
 
-            await doc.save();                
+            await doc.save();
         }
 
     } catch (err) {

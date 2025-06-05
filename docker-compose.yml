@@ -1,22 +1,36 @@
+version: '3.8'
+
 services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: civ-copilot-client:dev
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./client:/app
+    working_dir: /app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - api
   api:
     build:
-      context: .
+      context: ./server
       dockerfile: Dockerfile
-    image: swagmonster/civ-copilot:dev
+    image: civ-copilot-api:dev
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - ./server:/app
     working_dir: /app
-    command: npm run dev
+    env_file:
+      - ./server/.env
     depends_on:
       - mongo
-    env_file:
-      - .env
-
   mongo:
-    image: mongo
+    image: mongo:latest
     container_name: civ-mongo
     ports:
       - "27017:27017"

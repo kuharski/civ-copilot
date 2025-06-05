@@ -26,25 +26,25 @@ export default async function ingestBuildings() {
                     food: data.yields.food,
                     faith: data.yields.faith,
                     happiness: data.yields.happiness
-                }    
+                }
             };
 
             // always fill info first if only one field is available
-            if(data.game_info == null && data.strategy == null) {
-               if(buildingDoc.prereqTech) {
-                const tech = await Tech.findOne({name: buildingDoc.prereqTech});
-                buildingDoc.info = data.name + " is a basic building available in the " + tech.era + ".";
-               } else {
-                buildingDoc.info = data.name + " is a basic building available in the Ancient Era.";
-               }
-               
+            if (data.game_info == null && data.strategy == null) {
+                if (buildingDoc.prereqTech) {
+                    const tech = await Tech.findOne({ name: buildingDoc.prereqTech });
+                    buildingDoc.info = data.name + " is a basic building available in the " + tech.era + ".";
+                } else {
+                    buildingDoc.info = data.name + " is a basic building available in the Ancient Era.";
+                }
+
             }
-            else if (data.game_info == null && data.strategy != null){
-               buildingDoc.info = buildingDoc.strategy;
-               buildingDoc.strategy = null;
+            else if (data.game_info == null && data.strategy != null) {
+                buildingDoc.info = buildingDoc.strategy;
+                buildingDoc.strategy = null;
             }
 
-            await Building.updateOne({"name": buildingDoc.name}, {$set: buildingDoc}, {upsert: true});
+            await Building.updateOne({ "name": buildingDoc.name }, { $set: buildingDoc }, { upsert: true });
             //console.log(`ingested ${buildingDoc.info}`)
         }
 
