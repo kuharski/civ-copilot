@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'; 
-import './App.css';
-
+import LandingPage from './components/LandingPage';
 function App() {
 
   const [result, setResult] = useState<string>('Loading…');
@@ -29,14 +28,11 @@ function App() {
 
 
   return (
-    <div className="App" style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>API Health Check</h1>
-      {/* 
-        We use a <pre> tag so that whitespace and formatting are preserved.
-        Whatever string is in result will show up exactly as-is.
-      */}
-      <pre>{result}</pre>
-    </div>
+    <LandingPage />
+    // <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-4xl font-bold">
+    //   <h1>API Health Check</h1>
+    //   <pre>{result}</pre>
+    // </div>
   );
 }
 
