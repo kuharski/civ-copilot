@@ -5,7 +5,7 @@ import Unit from "../../models/Unit.js";
 import Building from "../../models/Building.js"
 
 import OpenAI from "openai";
-import { parseNullDef } from "openai/_vendor/zod-to-json-schema/index.mjs";
+
 const client = new OpenAI({
     apiKey: process.env.AI_API_KEY,
     baseURL: "https://api.fireworks.ai/inference/v1"
