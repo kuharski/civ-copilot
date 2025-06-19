@@ -30,7 +30,7 @@ app.get('/api/health', (req, res) => {
 
 app.get('/api/civs', async (req, res) => {
   try {
-    const civs = await Civilization.find({}, 'civ.name civ.slug strategy.primaryVictory -_id');
+    const civs = await Civilization.find({}, 'leader.name leader.subtitle leader.icon civ.slug civ.icon');
     res.status(200).json(civs);
   } catch (err) {
     console.error(err);

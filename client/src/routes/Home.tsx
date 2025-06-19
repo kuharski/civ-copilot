@@ -1,4 +1,3 @@
-import React from 'react';
 import { useEffect, useState } from 'react';
 import fetchHealth from '../api/health';
 import { HealthResponse } from '../types/utils';
@@ -6,17 +5,17 @@ import { Link } from 'react-router';
 
 export default function Home() {
 
-    // const [status, setStatus] = useState<HealthResponse | null>(null);
+    const [status, setStatus] = useState<HealthResponse | null>(null);
 
-    // useEffect(() => {
-    //     const checkHealth = async () => {
-    //         const data = await fetchHealth();
-    //         console.log(data.status);
-    //         console.log(data.mongoStatus);
-    //         setStatus(data);
-    //     };
-    //     checkHealth();
-    // }, []);
+    useEffect(() => {
+        const checkHealth = async () => {
+            const data = await fetchHealth();
+            console.log(data.status);
+            console.log(data.mongoStatus);
+            setStatus(data);
+        };
+        checkHealth();
+    }, []);
 
     return (
         <div className="h-full w-full px-4 pb-4">
@@ -46,7 +45,7 @@ export default function Home() {
             <p className="mt-4 text-lg text-secondary font-medium">The Scholar's Table</p>
             </div>
         </div>
-        {/* {status ? (
+        {status ? (
         <div className="mt-8 text-center text-3xl text-green-400">
             <p>{status.status}</p>
             <p>{status.mongoStatus}</p>
@@ -54,7 +53,7 @@ export default function Home() {
         </div>
         ) : (
         <div className="mt-8 text-center text-3xl text-green-400">Loading health status…</div>
-        )} */}
+        )}
         </div>
     );
 };
