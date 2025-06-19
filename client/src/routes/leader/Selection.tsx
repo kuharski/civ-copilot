@@ -17,8 +17,13 @@ export default function Selection() {
     }, []);
 
     return (
-    <h1>{JSON.stringify(civs[1])}</h1>
-         
+        <div>
+            {civs.length > 0 ? (
+            <h1>{civs[0].leader.name}</h1>
+            ) : (
+            <h1>Loading…</h1>
+            )}
+        </div>  
     );
 
 }
