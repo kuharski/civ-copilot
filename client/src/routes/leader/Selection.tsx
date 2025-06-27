@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { CivPreview } from '../../types/utils';
-import fetchCivPreview from '../../api/preview';
-import Loading from '../../components/Loading'
+import { fetchCivPreview } from '../../api/hallofleaders';
+import Loading from '../../components/Loading';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import '../../styles/swiper.css'
+import '../../styles/swiper.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -60,7 +60,7 @@ export default function Selection() {
                 {civs.map((civ, index) => (
                     <SwiperSlide key={index}>
                     <div className="h-full flex flex-col justify-center p-6 rounded-xl text-center">
-                        <Link to="/leader/overview/">
+                        <Link to={"/leader/overview/" + civ.civ.slug}>
                             <div className="relative mx-auto size-40 lg:size-44 hover:cursor-pointer group">
                                 <img src={civ.leader.icon} alt={civ.leader.name} className="relative w-full h-full object-cover hover:drop-shadow-[0_0_12px_rgba(255,215,0,0.8)] transition-shadow duration-300" />
                             </div>

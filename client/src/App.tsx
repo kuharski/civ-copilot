@@ -36,7 +36,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="leader">
             <Route path="selection" element={ <Selection /> }/>
-            <Route path="overview" element={ <Overview /> } />
+            <Route path="overview/:civilization" element={ <Overview /> } />
           </Route>
       </Route>
     </Routes>

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { json } from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
@@ -34,10 +34,20 @@ app.get('/api/civs', async (req, res) => {
     res.status(200).json(civs);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Error Retrieving Civs' });
   }
 });
 
+app.get('/api/civs/:id', async (req, res) => {
+  try {
+    const slug = req.params.id;
+    const civ = await Civilization.findOne({ 'civ.slug': slug});
+    res.status(200).json(civ);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error Retrieving ' +  req.params.id});    
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`server running on http://localhost:${PORT}`));
