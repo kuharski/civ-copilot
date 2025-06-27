@@ -1,0 +1,43 @@
+.swiper-button-next {
+  color: #c87f4f !important;
+  padding-right: 2.1rem;
+}
+.swiper-button-prev {
+  color: #c87f4f !important;
+  padding-left: 2.1rem;
+}
+
+.swiper-slide {
+  transition: all 0.3s ease;
+  opacity: 0.5;
+  transform: scale(0.8);
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.swiper-slide-active {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .swiper-button-next {
+    padding-right: 7rem !important;
+  }
+
+  .swiper-button-prev {
+    padding-left: 7rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .swiper-button-next {
+    padding-right: 2.5rem !important;
+  }
+
+  .swiper-button-prev {
+    padding-left: 2.5rem !important;
+  }
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import fetchHealth from '../api/health';
+import Loading from '../components/Loading';
 import { HealthResponse } from '../types/utils';
 import { Link } from 'react-router';
 
@@ -52,7 +53,7 @@ export default function Home() {
             <p>{status.timestamp}</p>
         </div>
         ) : (
-        <div className="mt-8 text-center text-3xl text-green-400">Loading health status…</div>
+        <Loading />
         )}
         </div>
     );

@@ -11,7 +11,7 @@ export default function Navbar(){
     return(
         <nav className="relative flex justify-between px-6 py-4 bg-surface border-b border-border">
             { !home ? (
-                <button onClick={() => navigate(-1)} className="text-subtle hover:text-primary">
+                <button onClick={() => navigate(-1)} className="text-subtle hover:text-secondary">
                     <ArrowLeft className="w-5 h-5"/>
                 </button>
             ) : (

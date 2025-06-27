@@ -3,16 +3,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: '#0f0f0f',          // Dark, modern base
-        surface: '#1c1c1e',             // Elevated UI panels
-        primary: '#d3a04d',             // Golden empire tone (Civ-inspired)
-        secondary: '#476072',           // Steel blue (UI-friendly + tactical)
-        accent: '#9c6644',              // Bronze (historic tone)
-        highlight: '#4da8a9',           // Cyan green (modern interactive hint)
-        danger: '#a64b2a',              // Terracotta red for alerts
-        text: '#e2e2e2',                // Clean readable light text
-        subtle: '#999999',              // Muted text/icons
-        border: '#2a2a2a',              // Divider lines
+        background: '#121212',         // Deep charcoal, but cleaner than pitch black
+        surface: '#1f1f25',            // Slightly lifted for modern card contrast
+        primary: '#f0b441',            // Vibrant gold with a touch of glow
+        secondary: '#5b9bd5',          // Brighter steel blue (modern, accessible)
+        accent: '#c87f4f',             // Refined bronze with warmth and clarity
+        highlight: '#5fe0dc',          // Aqua-cyan pop (friendly, interactive)
+        danger: '#ff5c40',             // Vivid terracotta-red for sharp alerts
+        text: '#f5f5f5',               // Pureer light gray-white for better readability
+        subtle: '#b0b0b0',             // More visible muted text (accessibility)
+        border: '#2f2f2f',             // Soft but modern dividers
       },
       fontFamily: {
         serif: ['Georgia', 'serif'],
