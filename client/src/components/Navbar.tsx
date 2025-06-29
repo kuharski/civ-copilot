@@ -1,8 +1,7 @@
 import { Link } from 'react-router';
-import { useLocation } from 'react-router'
 import Avatar from '@mui/material/Avatar';
 export default function Navbar(){
-    
+
     return(
         <nav className="relative flex justify-between px-6 py-4 bg-surface border-b border-border">
             <Link to={"/"}>
