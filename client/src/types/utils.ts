@@ -13,9 +13,14 @@ export interface CivPreview {
     icon: string;
   };
   civ: {
+    name: string;
     slug: string;
     icon: string;
   };
+}
+
+export interface PreviewProps {
+  civs: CivPreview[];
 }
 
 export interface Civ {
