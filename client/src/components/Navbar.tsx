@@ -1,12 +1,8 @@
 import { Link } from 'react-router';
 import { useLocation } from 'react-router'
 import Avatar from '@mui/material/Avatar';
-import { ArrowLeft } from 'lucide-react';
 export default function Navbar(){
-    let location = useLocation();
-
-    const home = location.pathname === "/";
-
+    
     return(
         <nav className="relative flex justify-between px-6 py-4 bg-surface border-b border-border">
             <Link to={"/"}>
