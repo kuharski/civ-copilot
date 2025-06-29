@@ -17,7 +17,6 @@ export default function Carousel({ civs }: PreviewProps) {
             <Swiper
                 modules={[Navigation]}
                 spaceBetween={-100}
-                initialSlide={Math.floor(civs.length / 2)}
                 loop={true}
                 slidesPerView={3}
                 centeredSlides
@@ -48,7 +47,7 @@ export default function Carousel({ civs }: PreviewProps) {
                         </Link>
                         <h2 className="text-text text-xl md:text-2xl font-bold pb-1">{civ.leader.name}</h2>
                         <div className="flex justify-center items-center">
-                            <p className="text-sm md:text-md lg:text-lg text-gray-500 pr-1.5">{civ.leader.subtitle}</p>
+                            <p className="text-sm md:text-md text-gray-500 pr-1.5">{civ.leader.subtitle}</p>
                             <img src={civ.civ.icon} alt={civ.civ.slug} className="size-5 md:size-6 lg:size-7" />
                         </div>
                     </div>
