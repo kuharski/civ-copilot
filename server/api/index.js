@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import Civilization from "../models/Civilization.js";
 import Unit from "../models/Unit.js";
 import Building from "../models/Building.js";
+import Tech from "../models/Tech.js";
 
 dotenv.config();
 
@@ -49,12 +50,18 @@ app.get('/api/civs/:id', async (req, res) => {
     // retrieve units and buildings
     rootObj.civ.uniqueUnits = await Promise.all(rootObj.civ.uniqueUnits.map(async (unit) => {
       const details = await Unit.findOne({ 'name': unit }, 'name icon info prereqTech strategy -_id');
-      return details.toObject();
+      let detailsObj = details.toObject();
+      const techDetails = await Tech.findOne({'name': detailsObj.prereqTech}, 'name era icon -_id');
+      detailsObj.prereqTech = techDetails;
+      return detailsObj;
     }));
 
     rootObj.civ.uniqueBuildings = await Promise.all(rootObj.civ.uniqueBuildings.map(async (building) => {
       const details = await Building.findOne({ 'name': building }, 'name icon info prereqTech strategy yields -_id');
-      return details.toObject();
+      let detailsObj = details.toObject();
+      const techDetails = await Tech.findOne({'name': detailsObj.prereqTech}, 'name era icon -_id');
+      detailsObj.prereqTech = techDetails;
+      return detailsObj;
     }));
 
     res.status(200).json(rootObj);
