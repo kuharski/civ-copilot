@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import Civilization from "../models/Civilization.js";
+import Unit from "../models/Unit.js";
+import Building from "../models/Building.js";
 
 dotenv.config();
 
@@ -41,11 +43,24 @@ app.get('/api/civs', async (req, res) => {
 app.get('/api/civs/:id', async (req, res) => {
   try {
     const slug = req.params.id;
-    const civ = await Civilization.findOne({ 'civ.slug': slug});
-    res.status(200).json(civ);
+    const root = await Civilization.findOne({ 'civ.slug': slug });
+    let rootObj = root.toObject();
+  
+    // retrieve units and buildings
+    rootObj.civ.uniqueUnits = await Promise.all(rootObj.civ.uniqueUnits.map(async (unit) => {
+      const details = await Unit.findOne({ 'name': unit }, 'name icon info prereqTech strategy -_id');
+      return details.toObject();
+    }));
+
+    rootObj.civ.uniqueBuildings = await Promise.all(rootObj.civ.uniqueBuildings.map(async (building) => {
+      const details = await Building.findOne({ 'name': building }, 'name icon info prereqTech strategy yields -_id');
+      return details.toObject();
+    }));
+
+    res.status(200).json(rootObj);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error Retrieving ' +  req.params.id});    
+    res.status(500).json({ error: err +  req.params.id});    
   }
 });
 

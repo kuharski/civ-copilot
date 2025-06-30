@@ -23,7 +23,8 @@ export default function Overview() {
             { civ ? (
                 <div className="flex flex-col items-center justify center">
                     <h1 className="text-3xl">{civ.civ.name}</h1>
-                    <p className="text-3xl">{civ.strategy.general}</p>
+                    <p className="text-3xl">{civ.civ.uniqueUnits[0].name}</p>
+                    <p className="text-3xl">{civ.civ.uniqueUnits[0].info}</p>
                 </div>
             ) : (
                 <Loading />

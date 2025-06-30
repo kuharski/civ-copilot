@@ -23,13 +23,38 @@ export interface PreviewProps {
   civs: CivPreview[];
 }
 
+interface Unit {
+  name: string;
+  icon: string;
+  info: string;
+  prereqTech: string;
+  strategy: string;
+}
+
+interface Building {
+  name: string;
+  icon: string;
+  info: string;
+  prereqTech: string;
+  strategy: string;
+  yields: {
+    gold: number;
+    production: number;
+    science: number;
+    culture: number;
+    food: number;
+    faith: number;
+    happiness: number;
+  }
+}
+
 export interface Civ {
   civ: {
     name: string;
     slug: string;
     icon: string;
-    uniqueBuildings: string[];
-    uniqueUnits: string[];
+    uniqueUnits: Unit[];
+    uniqueBuildings: Building[];
     historicalInfo: {
       heading: string;
       text: string;
