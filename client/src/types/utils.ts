@@ -27,7 +27,11 @@ interface Unit {
   name: string;
   icon: string;
   info: string;
-  prereqTech: string;
+  prereqTech: {
+    name: string;
+    era: string;
+    icon: string;
+  };
   strategy: string;
 }
 
@@ -35,7 +39,11 @@ interface Building {
   name: string;
   icon: string;
   info: string;
-  prereqTech: string;
+  prereqTech: {
+    name: string;
+    era: string;
+    icon: string;
+  };
   strategy: string;
   yields: {
     gold: number;
