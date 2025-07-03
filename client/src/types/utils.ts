@@ -23,6 +23,10 @@ export interface PreviewProps {
   civs: CivPreview[];
 }
 
+export interface OverviewProps {
+  civ: Civ;
+}
+
 interface Unit {
   name: string;
   icon: string;

@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { fetchCiv } from '../../api/hallofleaders';
 import { useParams } from 'react-router';
 import Loading from '../../components/Loading';
+import History from '../../components/History';
 import { Civ } from '../../types/utils'
 
 export default function Overview() {
     const { civilization } = useParams<{ civilization: string }>();
     const [civ, civStatus] = useState< Civ | null>(null);
+    
 
     useEffect(() => {
         const getCiv = async () => {
@@ -32,14 +34,15 @@ export default function Overview() {
         <>
             {civ ? 
                 (
-                <div className="flex flex-col items-center justify-center text-text">
+                <div className="flex flex-col items-center justify-center text-text mb-12">
                     <div className="flex flex-col justify-center items-center">
                         <h1 className="text-3xl md:text-5xl lg:text-6xl mt-12 mb-4">Strategic Overview</h1>
                         <h1 className="text-primary text-3xl md:text-5xl lg:text-6xl">{civ.civ.name}</h1>
                     </div>
                     <div className="lg:flex lg:flex-row justify-center lg:justify-evenly items-center lg:items-start gap-6 my-10 w-full">
-                        {/* leader section */}
-                        <div className="flex flex-col justify-center items-center">
+                        {/* section 1 */}
+                        <div className="flex flex-col justify-center items-center mt-10 lg:mt-0">
+                        {/* leader card */}
                         <h2 className="text-3xl md:text-4xl">Leader</h2>
                         <div className="flex flex-col justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
                             <h3 className="text-3xl md:text-4xl">{civ.leader.name}</h3>
@@ -52,16 +55,14 @@ export default function Overview() {
                             <p className="text-md md:text-xl mt-2">{civ.leader.leaderTrait.name}</p>
                             <p className="text-sm md:text-lg text-justify">{civ.leader.leaderTrait.effect}</p>
                         </div>
-                        </div>
-                        {/* unique advantages section */}
-                        <div className="flex flex-col justify-center items-center mt-10 lg:mt-0">
-                        <h2 className="text-3xl md:text-4xl">Unique Advantages</h2>
+                        <h2 className="text-3xl md:text-4xl mt-10">Unique Advantages</h2>
+                        {/* unique units */}
                         <>
                             {civ.civ.uniqueUnits.length > 0 ? (
                                 civ.civ.uniqueUnits.map(unit => (
                                     <div className="flex flex-col xl:flex-row xl:max-w-3xl xl:items-start justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
                                         <div className="flex flex-col justify-center items-center xl:basis-2/5">
-                                            <h3 className="text-3xl md:text-4xl">{unit.name}</h3>
+                                            <h3 className="text-3xl md:text-4xl text-center">{unit.name}</h3>
                                             <img src={unit.icon} alt={unit.name} className="size-32 md:size-36 xl:size-40 mt-2 mb-2"/>
                                             <p className="text-md md:text-lg">{unit.prereqTech.era}</p>
                                             <div className="flex justify-center items-center">
@@ -79,6 +80,7 @@ export default function Overview() {
                                 ))
                             ) : (<></>) }
                         </>
+                        {/* unique buildings */}
                         <>
                             {civ.civ.uniqueBuildings.length > 0 ? (
                                 civ.civ.uniqueBuildings.map(building => (
@@ -86,11 +88,16 @@ export default function Overview() {
                                         <div className="flex flex-col justify-center items-center xl:basis-2/5">
                                             <h3 className="text-3xl md:text-4xl text-center">{building.name}</h3>
                                             <img src={building.icon} alt={building.name} className="size-32 md:size-36 lg:size-40 mt-4 mb-2"/>
-                                            <p className="text-md md:text-lg">{building.prereqTech.era}</p>
-                                            <div className="flex justify-center items-center">
-                                                <p className="text-md md:text-lg pr-1.5">Requires {building.prereqTech.name}</p>
-                                                <img src={building.prereqTech.icon} alt={building.prereqTech.name} className="size-6 md:size-8"/>
-                                            </div>
+                                            {building.prereqTech?.era != null ? (
+                                                <>
+                                                <p className="text-md md:text-lg">building.prereqTech.era</p>
+                                                <div className="flex justify-center items-center">
+                                                    <p className="text-md md:text-lg pr-1.5">Requires {building.prereqTech.name}</p>
+                                                    <img src={building.prereqTech.icon} alt={building.prereqTech.name} className="size-6 md:size-8"/>
+                                                </div>
+                                                </>
+                                            ) : (<p className="text-md md:text-lg">Requires No Research</p>)
+                                            }
                                             <>
                                                 {Object.values(building.yields).some(val => val > 0) ? (
                                                     <>
@@ -117,17 +124,37 @@ export default function Overview() {
                                         <div className="flex flex-col justify-center items-center xl:basis-3/5 xl:pl-6">
                                             <p className="text-md md:text-xl mt-2">Information</p>
                                             <p className="text-sm md:text-lg text-justify">{building.info}</p>
-                                            <p className="text-md md:text-xl mt-2">Strategy</p>
-                                            <p className="text-sm md:text-lg text-justify">{building.strategy}</p>
+                                            {building.strategy ? 
+                                            (<><p className="text-md md:text-xl mt-2">Strategy</p>
+                                            <p className="text-sm md:text-lg text-justify">{building.strategy}</p></>)
+                                            : (<></>)
+                                            }
                                         </div>
                                     </div>
                                 ))
                             ) : (<></>) }
                         </>
                         </div>
+                        {/* section 2 */}
+                        <div className="flex flex-col justify-center items-center">
+                            {/*strategy card */}
+                            <h2 className="text-3xl md:text-4xl">Strategy</h2>
+                            <div className="flex flex-col justify-center items-center max-w-80 md:max-w-96 xl:max-w-2xl w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
+                                <h3 className="text-3xl md:text-4xl">Victory Focus</h3>
+                                <p className="text-md md:text-xl mt-2">Preferred Path</p>
+                                <p className="text-sm md:text-lg">{civ.strategy.primaryVictory} Victory</p>
+                                <p className="text-md md:text-xl mt-2">Alternative Path</p>
+                                <p className="text-sm md:text-lg">{civ.strategy.secondaryVictory} Victory</p>
+                                <h3 className="text-3xl md:text-4xl mt-4">How to Win</h3>
+                                <p className="text-sm md:text-lg text-justify">{civ.strategy.general}</p>
+                                <h3 className="text-3xl md:text-4xl mt-4">How to Counter</h3>
+                                <p className="text-sm md:text-lg text-justify">{civ.strategy.counter}</p>
+                            </div>
+                        </div>
                     </div>
+                    {/* civilization history */}
+                    <History civ={civ}/>
                 </div>
-
                 ) : (
                 <div className="flex flex-col flex-1 items-center justify-center h-full">
                     <div className="flex flex-1 items-center justify-center h-full w-full"><Loading /></div>
