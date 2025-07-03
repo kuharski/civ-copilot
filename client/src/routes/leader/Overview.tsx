@@ -3,7 +3,7 @@ import { fetchCiv } from '../../api/hallofleaders';
 import { useParams } from 'react-router';
 import Loading from '../../components/Loading';
 import History from '../../components/History';
-import { Civ } from '../../types/utils'
+import { Civ } from '../../types/utils';
 
 export default function Overview() {
     const { civilization } = useParams<{ civilization: string }>();
@@ -30,22 +30,37 @@ export default function Overview() {
         { tag: "happiness", label: "Happiness", icon: "/icons/happiness.png" },
     ];
 
+    function getVictoryStyle(victory: string){
+        switch (victory) {
+            case "Domination":
+                return "bg-red-700"
+            case "Science":
+                return "bg-sky-600";
+            case "Diplomatic":
+                return "bg-green-600";
+            case "Cultural":
+                return "bg-purple-600";
+            default:
+                return "bg-gray-400";
+        }
+    }
+
     return(
         <>
-            {civ ? 
+            {civ ?
                 (
                 <div className="flex flex-col items-center justify-center text-text mb-12">
                     <div className="flex flex-col justify-center items-center">
-                        <h1 className="text-3xl md:text-5xl lg:text-6xl mt-12 mb-4">Strategic Overview</h1>
-                        <h1 className="text-primary text-3xl md:text-5xl lg:text-6xl">{civ.civ.name}</h1>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl mt-12 mb-4 md:mb-8">Strategic Overview</h1>
+                        <h1 className="text-primary text-4xl md:text-5xl lg:text-6xl">{civ.civ.name}</h1>
                     </div>
                     <div className="lg:flex lg:flex-row justify-center lg:justify-evenly items-center lg:items-start gap-6 my-10 w-full">
                         {/* section 1 */}
-                        <div className="flex flex-col justify-center items-center mt-10 lg:mt-0">
+                        <div className="flex flex-col justify-center items-center">
                         {/* leader card */}
                         <h2 className="text-3xl md:text-4xl">Leader</h2>
                         <div className="flex flex-col justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
-                            <h3 className="text-3xl md:text-4xl">{civ.leader.name}</h3>
+                            <h3 className="text-3xl md:text-4xl text-center">{civ.leader.name}</h3>
                             <img src={civ.leader.icon} alt={civ.leader.name} className="size-32 md:size-36 lg:size-40 mt-1"/>
                             <div className="flex justify-center items-center">
                                 <p className="text-md md:text-lg pr-1.5">{civ.leader.subtitle}</p>
@@ -60,17 +75,17 @@ export default function Overview() {
                         <>
                             {civ.civ.uniqueUnits.length > 0 ? (
                                 civ.civ.uniqueUnits.map(unit => (
-                                    <div className="flex flex-col xl:flex-row xl:max-w-3xl xl:items-start justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
-                                        <div className="flex flex-col justify-center items-center xl:basis-2/5">
+                                    <div className="flex flex-col 2xl:flex-row 2xl:max-w-3xl 2xl:items-start justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
+                                        <div className="flex flex-col justify-center items-center 2xl:basis-2/5">
                                             <h3 className="text-3xl md:text-4xl text-center">{unit.name}</h3>
-                                            <img src={unit.icon} alt={unit.name} className="size-32 md:size-36 xl:size-40 mt-2 mb-2"/>
+                                            <img src={unit.icon} alt={unit.name} className="size-32 md:size-36 lg:size-40 mt-2 mb-2"/>
                                             <p className="text-md md:text-lg">{unit.prereqTech.era}</p>
                                             <div className="flex justify-center items-center">
                                                 <p className="text-md md:text-lg pr-1.5">Requires {unit.prereqTech.name}</p>
                                                 <img src={unit.prereqTech.icon} alt={unit.prereqTech.name} className="size-6 md:size-8"/>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col justify-center items-center xl:basis-3/5 xl:pl-6">
+                                        <div className="flex flex-col justify-center items-center 2xl:basis-3/5 2xl:pl-6">
                                             <p className="text-md md:text-xl mt-2">Information</p>
                                             <p className="text-sm md:text-lg text-justify">{unit.info}</p>
                                             <p className="text-md md:text-xl mt-2">Strategy</p>
@@ -84,8 +99,8 @@ export default function Overview() {
                         <>
                             {civ.civ.uniqueBuildings.length > 0 ? (
                                 civ.civ.uniqueBuildings.map(building => (
-                                    <div className="flex flex-col xl:flex-row xl:max-w-3xl xl:items-start justify-center items-center max-w-80 md:max-w-96 w-full my-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
-                                        <div className="flex flex-col justify-center items-center xl:basis-2/5">
+                                    <div className="flex flex-col 2xl:flex-row 2xl:max-w-3xl 2xl:items-start justify-center items-center max-w-80 md:max-w-96 w-full my-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
+                                        <div className="flex flex-col justify-center items-center 2xl:basis-2/5">
                                             <h3 className="text-3xl md:text-4xl text-center">{building.name}</h3>
                                             <img src={building.icon} alt={building.name} className="size-32 md:size-36 lg:size-40 mt-4 mb-2"/>
                                             {building.prereqTech?.era != null ? (
@@ -121,7 +136,7 @@ export default function Overview() {
                                                 }
                                             </>
                                         </div>
-                                        <div className="flex flex-col justify-center items-center xl:basis-3/5 xl:pl-6">
+                                        <div className="flex flex-col justify-center items-center 2xl:basis-3/5 2xl:pl-6">
                                             <p className="text-md md:text-xl mt-2">Information</p>
                                             <p className="text-sm md:text-lg text-justify">{building.info}</p>
                                             {building.strategy ? 
@@ -139,12 +154,16 @@ export default function Overview() {
                         <div className="flex flex-col justify-center items-center">
                             {/*strategy card */}
                             <h2 className="text-3xl md:text-4xl">Strategy</h2>
-                            <div className="flex flex-col justify-center items-center max-w-80 md:max-w-96 xl:max-w-2xl w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
+                            <div className="flex flex-col justify-center items-center max-w-80 md:max-w-96 2xl:max-w-2xl lg:max-w-lg w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
                                 <h3 className="text-3xl md:text-4xl">Victory Focus</h3>
-                                <p className="text-md md:text-xl mt-2">Preferred Path</p>
-                                <p className="text-sm md:text-lg">{civ.strategy.primaryVictory} Victory</p>
-                                <p className="text-md md:text-xl mt-2">Alternative Path</p>
-                                <p className="text-sm md:text-lg">{civ.strategy.secondaryVictory} Victory</p>
+                                <p className="text-lg md:text-2xl mt-4">Preferred Path</p>
+                                <div className={`px-4 py-1 rounded-full font-semibold text-md md:text-lg mt-4 ${getVictoryStyle(civ.strategy.primaryVictory)}`}>
+                                    <p className="text-md md:text-lg">{civ.strategy.primaryVictory} Victory</p>
+                                </div>
+                                <p className="text-lg md:text-2xl mt-4">Alternative Path</p>
+                                <div className={`px-4 py-1 rounded-full font-semibold text-md md:text-lg mt-4 ${getVictoryStyle(civ.strategy.secondaryVictory)}`}>
+                                    <p className="text-md md:text-lg">{civ.strategy.secondaryVictory} Victory</p>
+                                </div>
                                 <h3 className="text-3xl md:text-4xl mt-4">How to Win</h3>
                                 <p className="text-sm md:text-lg text-justify">{civ.strategy.general}</p>
                                 <h3 className="text-3xl md:text-4xl mt-4">How to Counter</h3>

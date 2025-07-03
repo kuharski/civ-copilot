@@ -28,15 +28,15 @@ export default function History({ civ }: OverviewProps) {
                 {/* first column */}
                 <div className="flex flex-col w-full items-center">
                     {firstHalf.map(({heading, text}, idx) => (
-                    <div className="flex flex-col xl:max-w-xl justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
+                    <div className="flex flex-col xl:max-w-xl justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] px-6 pt-6 pb-2">
                         <h3 className="text-3xl md:text-4xl text-center">{heading}</h3>
                         {expandedSections[idx] && (
-                            <p className="text-sm md:text-lg text-justify mt-2">{text}</p>
+                            <p className="text-sm md:text-lg text-justify ">{text}</p>
                         )}
-                        <p onClick={() => toggleSection(idx)} className="text-secondary mt-2 text-sm md:text-base cursor-pointer">
+                        <p onClick={() => toggleSection(idx)} className="text-secondary text-sm mt-2 md:text-base cursor-pointer">
                             {expandedSections[idx] ? 
-                            (<ChevronUp className="mt-2" size={32} />) 
-                            : (<ChevronDown className="mt-2" size={32} />)}
+                            (<ChevronUp className="" size={32} />) 
+                            : (<ChevronDown className="" size={32} />)}
                         </p>
                     </div>
                     ))}
@@ -46,15 +46,15 @@ export default function History({ civ }: OverviewProps) {
                     {secondHalf.map(({heading, text}, idx) => {
                         const effIdx: number = mid + idx;
                         return (
-                            <div className="flex flex-col xl:max-w-xl justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
+                            <div className="flex flex-col xl:max-w-xl justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] px-6 pt-6 pb-2">
                                 <h3 className="text-3xl md:text-4xl text-center">{heading}</h3>
                                 {expandedSections[effIdx] && (
-                                    <p className="text-sm md:text-lg text-justify mt-2">{text}</p>
+                                    <p className="text-sm md:text-lg text-justify">{text}</p>
                                 )}
-                                <p onClick={() => toggleSection(effIdx)} className="text-secondary mt-2 text-sm md:text-base cursor-pointer">
+                                <p onClick={() => toggleSection(effIdx)} className="text-secondary text-sm mt-2 md:text-base cursor-pointer">
                                     {expandedSections[effIdx] ? 
-                                    (<ChevronUp className="mt-2" size={32} />) 
-                                    : (<ChevronDown className="mt-2" size={32} />)}
+                                    (<ChevronUp size={36} />) 
+                                    : (<ChevronDown size={36} />)}
                                 </p>
                             </div>
                         );
