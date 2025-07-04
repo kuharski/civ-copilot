@@ -45,6 +45,11 @@ app.get('/api/civs/:id', async (req, res) => {
   try {
     const slug = req.params.id;
     const root = await Civilization.findOne({ 'civ.slug': slug });
+    
+    if (!root) {
+      return res.status(404).json({ error: `Civilization with slug "${slug}" not found` });
+    }
+    
     let rootObj = root.toObject();
   
     // retrieve units and buildings
@@ -68,6 +73,17 @@ app.get('/api/civs/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err +  req.params.id});    
+  }
+});
+
+app.get('/api/slugs', async (req, res) => {
+  try{
+    const details = await Civilization.find({}, 'civ.slug -_id');
+    const slugs = details.map(({ civ }) => civ.slug);
+    res.status(200).json(slugs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });    
   }
 });
 
