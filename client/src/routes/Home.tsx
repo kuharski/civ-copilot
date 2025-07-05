@@ -6,55 +6,38 @@ import { Link } from 'react-router';
 
 export default function Home() {
 
-    const [status, setStatus] = useState<HealthResponse | null>(null);
-
-    useEffect(() => {
-        const checkHealth = async () => {
-            const data = await fetchHealth();
-            console.log(data.status);
-            console.log(data.mongoStatus);
-            setStatus(data);
-        };
-        checkHealth();
-    }, []);
-
     return (
-        <div className="h-full w-full px-4 pb-4">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl text-center text-primary my-8 md:my-12">Your Civ V Strategy Companion</h1>
-
-        <div className="flex flex-col md:flex-row justify-center items-center gap-16 px-6">
-            <div className="flex flex-col items-center">
-                <div className="w-28 h-28 bg-surface rounded-full flex items-center justify-center shadow-md text-3xl">
-                    👤
+        <div className="flex flex-col items-center justify-center text-text">
+            <h1 className="text-text text-center text-3xl md:text-5xl lg:text-6xl mt-12 mb-2">
+                Your Civ V AI <br /> Strategy Companion
+            </h1>
+            <p className="text-text text-lg md:text-xl lg:text-2xl mt-1 md:mt-2 lg:mt-4">Your conquest awaits below.</p>
+            <div className="flex flex-col md:flex-col lg:flex-row w-full justify-center items-center px-6">
+                <div className="flex flex-col items-center mt-12 lg:mt-24">
+                    <Link to="/leader/selection">
+                        <div className="size-40 md:size-44 lg:size-60 hover:cursor-pointer">
+                            <img
+                                src={"/leadershall.png"}
+                                alt={"The Hall of Leaders"}
+                                className="rounded-full object-cover hover:drop-shadow-[0_0_12px_rgba(248,198,33,0.8)] transition-shadow duration-300"
+                            />
+                        </div>
+                    </Link>
+                    <p className="mt-6 text-2xl md:text-4xl text-accent">The Hall of Leaders</p>
                 </div>
-                <Link to="/leader/selection">
-                    <p className="mt-4 text-lg text-secondary font-medium">The Hall of Leaders</p>
-                </Link>
+                <div className="flex flex-col items-center mt-12 lg:mt-24 lg:ml-36">
+                    <Link to="/leader/selection">
+                        <div className="size-40 md:size-44 lg:size-60 hover:cursor-pointer">
+                            <img
+                                src={"/scholarstable.png"}
+                                alt={"The Scholar's Table"}
+                                className="rounded-full object-cover hover:drop-shadow-[0_0_12px_rgba(248,198,33,0.8)] transition-shadow duration-300"
+                            />
+                        </div>
+                    </Link>
+                    <p className="mt-6 text-2xl md:text-4xl text-accent">The Scholar's Table</p>
+                </div>
             </div>
-
-            <div className="flex flex-col items-center">
-            <div className="w-28 h-28 bg-surface rounded-full flex items-center justify-center shadow-md text-3xl">
-                ⚔️
-            </div>
-            <p className="mt-4 text-lg text-secondary font-medium">The War Room</p>
-            </div>
-
-            <div className="flex flex-col items-center">
-            <div className="w-28 h-28 bg-surface rounded-full flex items-center justify-center shadow-md text-3xl">
-                ⚗️
-            </div>
-            <p className="mt-4 text-lg text-secondary font-medium">The Scholar's Table</p>
-            </div>
-        </div>
-        {status ? (
-        <div className="mt-8 text-center text-3xl text-green-400">
-            <p>{status.status}</p>
-            <p>{status.mongoStatus}</p>
-            <p>{status.timestamp}</p>
-        </div>
-        ) : (
-        <Loading />
-        )}
         </div>
     );
 };
