@@ -21,11 +21,16 @@ export default function UniqueCards({ civ }: OverviewProps) {
                         <div className="flex flex-col justify-center items-center 2xl:basis-2/5">
                             <h3 className="text-3xl md:text-4xl text-center">{unit.name}</h3>
                             <img src={unit.icon} alt={unit.name} className="size-32 md:size-36 lg:size-40 mt-2 mb-2"/>
-                            <p className="text-md md:text-lg">{unit.prereqTech.era}</p>
-                            <div className="flex justify-center items-center">
-                                <p className="text-md md:text-lg pr-1.5">Requires {unit.prereqTech.name}</p>
-                                <img src={unit.prereqTech.icon} alt={unit.prereqTech.name} className="size-6 md:size-8"/>
-                            </div>
+                            {unit.prereqTech?.era != null ? (
+                                <>
+                                <p className="text-md md:text-lg">{unit.prereqTech.era}</p>
+                                <div className="flex justify-center items-center">
+                                    <p className="text-md md:text-lg pr-1.5">Requires {unit.prereqTech.name}</p>
+                                    <img src={unit.prereqTech.icon} alt={unit.prereqTech.name} className="size-6 md:size-8"/>
+                                </div>
+                                </>
+                            ) : (<p className="text-md md:text-lg">Requires No Research</p>)
+                            }
                         </div>
                         <div className="flex flex-col justify-center items-center 2xl:basis-3/5 2xl:pl-6">
                             <p className="text-md md:text-xl mt-2">Information</p>
