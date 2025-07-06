@@ -6,15 +6,21 @@ import Civilization from "../models/Civilization.js";
 import Unit from "../models/Unit.js";
 import Building from "../models/Building.js";
 import Tech from "../models/Tech.js";
-
+import techGraph from './techGraph.js';
 dotenv.config();
 
 const app = express();
 app.use(express.json()); // parse json request bodies
 app.use(morgan('dev')); // log requests
 
+const baseGraph = new techGraph();
+
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('mongo connected'))
+  .then(async () => {
+    console.log('mongo connected');
+    await baseGraph.init();
+    console.log('base graph built');
+  })
   .catch((err) => console.error('mongo error:', err));
 
 app.get('/api/health', (req, res) => {
