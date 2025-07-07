@@ -4,12 +4,6 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
 
-function printTree(graph) {
-  for (const [key, val] of graph) {
-    console.log(`Tech: ${key} \n ${val.prereqs}`)
-  }
-}
-
 const base = new techGraph();
 
 async function test(){
@@ -21,21 +15,21 @@ async function test(){
     await base.init();
     console.log('base graph built');
 
-    console.log("-------------------- \n TESTING BASE \n --------------------");
-    for (const [key, val] of base.graph) {
-      console.log(`${key}. Prereqs: ${val.prereqs} Postreqs: ${val.postreqs} Units: ${val.units}` )
-    }
+    // console.log("-------------------- \n TESTING BASE \n --------------------");
+    // for (const [key, val] of base.graph) {
+    //   console.log(`${key}. Prereqs: ${val.prereqs} Postreqs: ${val.postreqs} Units: ${JSON.stringify(val.units)}` )
+    // }
 
-    console.log("-------------------- \n TESTING CANDIDATE GRAPH \n --------------------");
+    // console.log("-------------------- \n TESTING CANDIDATE GRAPH \n --------------------");
     const candidates = techGraph.candidateSubgraph(base, ["Agriculture", "Archery", "Pottery", "Animal Husbandry", "Trapping"], 175);
-    for (const [key, val] of candidates.graph) {
-      console.log(`${key}. Prereqs: ${val.prereqs} Postreqs: ${val.postreqs}`);
-    }
+    // for (const [key, val] of candidates.graph) {
+    //   console.log(`${key}. Prereqs: ${val.prereqs} Postreqs: ${val.postreqs}`);
+    // }
 
     console.log("-------------------- \n TESTING ANCESTOR GRAPH \n --------------------");
     const ancestors = techGraph.ancestorSubgraph(candidates, ["Philosophy", "Construction"]);
     for (const [key, val] of ancestors.graph) {
-      console.log(`${key}. Prereqs: ${val.prereqs}`);
+      console.log(`${key}. ${val.weight} Prereqs: ${val.prereqs} Units: ${val.units?.map((u)=>u.info)} Buildings: ${val.buildings?.map((b)=>b.info)}`);
     }
 
     await mongoose.disconnect();

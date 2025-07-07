@@ -33,9 +33,15 @@ export default class techGraph {
                 prereqs: tech.prereqTechs,
                 postreqs: tech.techUnlocks,
                 units: tech.unitUnlocks,
-                buildings: tech.buildingUnlocks
+                buildings: tech.buildingUnlocks,
+                weight: -1,
+                priority: -1
             });
         });
+    }
+
+    getCost(tech) {
+        return this.graph?.get(tech).cost;
     }
 
     /**

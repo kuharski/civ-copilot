@@ -7,18 +7,19 @@ import Unit from "../models/Unit.js";
 import Building from "../models/Building.js";
 import Tech from "../models/Tech.js";
 import techGraph from './techGraph.js';
+import { costCap, weightAssignment } from './scheduling.js';
 dotenv.config();
 
 const app = express();
 app.use(express.json()); // parse json request bodies
 app.use(morgan('dev')); // log requests
 
-const baseGraph = new techGraph();
+const base = new techGraph();
 
 mongoose.connect(process.env.MONGO_URI)
   .then(async () => {
     console.log('mongo connected');
-    await baseGraph.init();
+    await base.init();
     console.log('base graph built');
   })
   .catch((err) => console.error('mongo error:', err));
@@ -90,6 +91,47 @@ app.get('/api/slugs', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });    
+  }
+});
+
+app.get('/api/techs', (req, res) => {
+  
+  const cpy = new techGraph(base);
+  const nodeArr = Array.from(cpy.graph).map(([key, val]) => ({
+    name: key,
+    cost: val.cost,
+    icon: val.icon,
+    prereqs: val.prereqs
+  }));
+
+  res.status(200).json(nodeArr);
+});
+
+app.post('/api/techs', async (req, res) => {
+  
+  try {
+    const { leader, playerStrat, techs } = req.body;
+    const cpy = new techGraph(base);
+    let highestCost = 0;
+    for (const tech of techs) {
+      const techCost = cpy.getCost(tech);
+      if (!techCost) {throw new Error(`${tech} is an invalid tech`);}
+      if(techCost > highestCost) {
+        highestCost = techCost;
+      }
+    }
+    const cap = costCap(highestCost);
+    const candidates = techGraph.candidateSubgraph(cpy, techs, cap);
+
+    const leaderInfo = await Civilization.findOne({'leader.name': leader}, 'strategy.primaryVictory strategy.secondaryVictory strategy.general -_id');
+    const leaderObj = leaderInfo.toObject();
+    const leaderStrat = "Recommended Path: " + leaderObj.strategy.primaryVictory + " Alternative Path: " + leaderObj.strategy.secondaryVictory + " Leader Strategy: " + leaderObj.strategy.general;
+    //const weightedCandidates = await weightAssignment(candidates, leader, leaderStrat, playerStrat);
+
+    res.json({ "techs": Array.from(candidates.graph.values()) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });       
   }
 });
 
