@@ -110,7 +110,7 @@ app.get('/api/techs', (req, res) => {
 app.post('/api/techs', async (req, res) => {
   
   try {
-    const { leader, playerStrat, techs } = req.body;
+    const { leader, playerScenario, techs } = req.body;
     const cpy = new techGraph(base);
     let highestCost = 0;
     for (const tech of techs) {
@@ -120,15 +120,42 @@ app.post('/api/techs', async (req, res) => {
         highestCost = techCost;
       }
     }
+    // calculate cap based on highest cost tech researched
     const cap = costCap(highestCost);
+    // create candidates graph
     const candidates = techGraph.candidateSubgraph(cpy, techs, cap);
+    //'civ.slug leaderTrait.effect strategy.primaryVictory strategy.general -_id'
+    const root = await Civilization.findOne({'leader.name': leader});
+    const rootObj = root.toObject();
 
-    const leaderInfo = await Civilization.findOne({'leader.name': leader}, 'strategy.primaryVictory strategy.secondaryVictory strategy.general -_id');
-    const leaderObj = leaderInfo.toObject();
-    const leaderStrat = "Recommended Path: " + leaderObj.strategy.primaryVictory + " Alternative Path: " + leaderObj.strategy.secondaryVictory + " Leader Strategy: " + leaderObj.strategy.general;
-    //const weightedCandidates = await weightAssignment(candidates, leader, leaderStrat, playerStrat);
+    // retrieve units
+    rootObj.civ.uniqueUnits = await Promise.all(rootObj.civ.uniqueUnits.map(async (unit) => {
+      const details = await Unit.findOne({ 'name': unit }, 'name prereqTech -_id');
+      let detailsObj = details.toObject();
+      return detailsObj;
+    }));
+    // retrieve buildings
+    rootObj.civ.uniqueBuildings = await Promise.all(rootObj.civ.uniqueBuildings.map(async (building) => {
+      const details = await Building.findOne({ 'name': building }, 'name prereqTech -_id');
+      let detailsObj = details.toObject();
+      return detailsObj;
+    }));
 
-    res.json({ "techs": Array.from(candidates.graph.values()) });
+    // build units string
+    const units = rootObj.civ.uniqueUnits.length > 0 ? 
+                rootObj.civ.uniqueUnits.map((u)=>(`{${u.name}, Prerequisite Technology: ${u.prereqTech}}`)).join(", ")
+                : "None";
+    // build buildings string
+    const buildings = rootObj.civ.uniqueBuildings.length > 0 ? 
+            rootObj.civ.uniqueBuildings.map((b)=>(`{${b.name}, Prerequisite Technology: ${b.prereqTech}}`)).join(", ")
+            : "None";
+    // build leader strategy string
+    const leaderStrat = "Leader: " + leader + ", Leader Trait: " + rootObj.leader.leaderTrait.effect + ", Unique Units: " + units +
+    ", Unique Buildings: " + buildings + ", Recommended Path: " + rootObj.strategy.primaryVictory + " Recommended Leader Strategy: " + rootObj.strategy.general;
+    // weight techs (LLM Call)
+    const weighted = await weightAssignment(candidates, leaderStrat, playerScenario);
+
+    res.json({ "response": weighted });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });       

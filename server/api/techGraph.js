@@ -27,6 +27,7 @@ export default class techGraph {
 
         techs.forEach((tech) => {
             this.graph.set(tech.name, {
+                name: tech.name,
                 era: tech.era,
                 cost: tech.cost,
                 icon: tech.icon,

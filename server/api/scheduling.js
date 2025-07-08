@@ -8,22 +8,103 @@ const client = new OpenAI({
     baseURL: "https://api.fireworks.ai/inference/v1"
 });
 
-export async function weightAssignment(candidates, leader, strategy) {
+export async function weightAssignment(candidates, leaderStrat, playerScenario) {
     try {
-        const sysPrompt = `
-            assign weights
-        `;
-        const message = [
-        `Civilization: ${doc.civ.name}`,
-        units.length ? `Unique Unit(s):\n${units.join("\n")}` : "",
-        buildings.length ? `Unique Building(s):\n${buildings.join("\n")}` : "",
-        `Leader Trait, ${doc.leader.leaderTrait.name}: ${doc.leader.leaderTrait.effect}`,
-        `Please generate:`,
-        `- A primary and secondary victory condition (must be different) from: Domination, Science, Diplomatic, Cultural`,
-        `- A general strategy for playing this civilization`,
-        `- A counter-strategy for facing this civilization`
-        ].join("\n");
 
+
+        const sysPrompt = `
+            You are a Sid Meier's Civilization V expert strategy assistant.
+
+            Your task is to assign a numeric weight (1–100) to each provided technology, depending on how important it is to the given leader's abilities and the player's scenario.  
+            - Prioritize synergy with the leader's unique traits, unique units, and unique buildings first (75% of the weight).  
+            - Consider the player's described scenario second (25% of the weight).
+
+            When assigning weights, always use the full range from 1 to 100. 
+            - Reserve 100 for the most critical techs, and 1 for techs that are almost entirely useless.
+            - Assign mid-range values (e.g., 40–60) to techs of moderate usefulness, and lower mid-range values (e.g., 10–30) to techs that are situational but not completely worthless.
+            - Avoid clustering many techs around the same weight. Instead, distribute weights relatively, so that the most important techs are close to 100 and the least important are close to 1, with others spaced meaningfully in between.
+            - Think of the weights as a ranking: each technology should clearly stand apart in importance. Use intermediate values liberally to express nuanced differences.
+
+            When analyzing consider the following.
+            - The leader's traits, recommended victory type, and recommended strategy.
+            - Unique unit and building prerequisite technologies (prioritize these heavily).
+            - The player's stated scenario.
+
+            Be rigorous and tactical, like an advanced Civ V player advising a tournament-level game.
+            `;
+
+        const techList = Array.from(candidates.graph.values()).map((tech)=> {
+            console.log(tech.name);
+            const units = tech.units && tech.units.length > 0 ?
+                          tech.units.map(u => `{${u.name}}`).join(", ") : "None";
+
+            const buildings = tech.buildings && tech.buildings.length > 0 ?
+                          tech.buildings.map(b => `{${b.name}}`).join(", ") : "None";              
+            return `Technology: ${tech.name}\nUnit Unlocks: ${units}\nBuildings Unlocks: ${buildings}`;
+        });
+        const message = [
+        `${leaderStrat}`,
+        `Player Scenario:\n ${playerScenario}`,
+        `List of Technologies:\n${techList}`,
+        `Please analyze and return the weighted list of Technologies in structured JSON format as described.`].join("\n\n");
+
+        // Call LLM
+        const response = await client.chat.completions.create({
+            "model": "accounts/fireworks/models/llama-v3p1-8b-instruct",
+            "temperature": 0.5,
+            "max_tokens": 500,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "tech_weights",
+                    "strict": true,
+                    "description": "Tech Weights",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "techs": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "description": "The name of the Technology"
+                                        },
+                                        "weight": {
+                                            "type": "number",
+                                            "description": "The assigned weight from 1 to 100",
+                                        }
+                                    },
+                                    "required": ["name", "weight"]
+                                }
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["techs"]
+                    }
+                }
+            },
+            "messages": [
+                {
+                    "role": "system",
+                    "content": sysPrompt
+                },
+                {
+                    "role": "user",
+                    "content": message
+                }
+            ]
+        });
+
+        try {
+            const weightedTechs = JSON.parse(response.choices[0].message.content);
+            console.log(weightedTechs);
+            return weightedTechs;
+        } catch (err) {
+            console.error("Failed to parse JSON from LLM", err);
+            throw err;
+        }
     } catch (err) {
         console.error("error in weight assignment: ", err);
     }
