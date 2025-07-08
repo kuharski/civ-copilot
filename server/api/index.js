@@ -7,7 +7,7 @@ import Unit from "../models/Unit.js";
 import Building from "../models/Building.js";
 import Tech from "../models/Tech.js";
 import techGraph from './techGraph.js';
-import { costCap, weightAssignment } from './scheduling.js';
+import { costCap, weightAssignment, priorityAssignment } from './scheduling.js';
 dotenv.config();
 
 const app = express();
@@ -153,9 +153,92 @@ app.post('/api/techs', async (req, res) => {
     const leaderStrat = "Leader: " + leader + ", Leader Trait: " + rootObj.leader.leaderTrait.effect + ", Unique Units: " + units +
     ", Unique Buildings: " + buildings + ", Recommended Path: " + rootObj.strategy.primaryVictory + " Recommended Leader Strategy: " + rootObj.strategy.general;
     // weight techs (LLM Call)
-    const weighted = await weightAssignment(candidates, leaderStrat, playerScenario);
+    const weighted = {
+        "techs": [
+            {
+                "name": "Mining",
+                "weight": 10
+            },
+            {
+                "name": "Drama and Poetry",
+                "weight": 10
+            },
+            {
+                "name": "Philosophy",
+                "weight": 15
+            },
+            {
+                "name": "Calendar",
+                "weight": 20
+            },
+            {
+                "name": "Optics",
+                "weight": 25
+            },
+            {
+                "name": "Writing",
+                "weight": 30
+            },
+            {
+                "name": "Engineering",
+                "weight": 30
+            },
+            {
+                "name": "Currency",
+                "weight": 35
+            },
+            {
+                "name": "Masonry",
+                "weight": 40
+            },
+            {
+                "name": "Construction",
+                "weight": 45
+            },
+            {
+                "name": "Mathematics",
+                "weight": 50
+            },
+            {
+                "name": "Bronze Working",
+                "weight": 60
+            },
+            {
+                "name": "Iron Working",
+                "weight": 70
+            },
+            {
+                "name": "The Wheel",
+                "weight": 80
+            },
+            {
+                "name": "Sailing",
+                "weight": 90
+            },
+            {
+                "name": "Horseback Riding",
+                "weight": 98
+            }
+        ]
+    }
+    // const weighted = await weightAssignment(candidates, leaderStrat, playerScenario);
+    const orderedWeights = weighted.techs.sort((a, b) => (a.weight - b.weight));
 
-    res.json({ "response": weighted });
+    // pop last three (highest)
+    const len = orderedWeights.length;
+    const targets = [orderedWeights[len - 1].name, orderedWeights[len - 2].name, orderedWeights[len - 3].name];
+    
+    // add priorities to candidates graph
+    const weightedCandidates = priorityAssignment(candidates, orderedWeights);
+    
+    // create ancestor graph
+    const ancestors = techGraph.ancestorSubgraph(weightedCandidates, targets);
+
+    
+    res.json({ "weighted": weighted, "ordered": orderedWeights,
+      "priorities": Array.from(weightedCandidates.graph.values()).map(val => (`name: ${val.name} cost: ${val.cost} weight: ${val.weight} priority: ${val.priority}`)),
+      "targets": targets
+     });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });       

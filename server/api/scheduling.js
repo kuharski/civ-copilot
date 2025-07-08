@@ -34,7 +34,7 @@ export async function weightAssignment(candidates, leaderStrat, playerScenario) 
             `;
 
         const techList = Array.from(candidates.graph.values()).map((tech)=> {
-            console.log(tech.name);
+            
             const units = tech.units && tech.units.length > 0 ?
                           tech.units.map(u => `{${u.name}}`).join(", ") : "None";
 
@@ -99,7 +99,6 @@ export async function weightAssignment(candidates, leaderStrat, playerScenario) 
 
         try {
             const weightedTechs = JSON.parse(response.choices[0].message.content);
-            console.log(weightedTechs);
             return weightedTechs;
         } catch (err) {
             console.error("Failed to parse JSON from LLM", err);
@@ -109,6 +108,46 @@ export async function weightAssignment(candidates, leaderStrat, playerScenario) 
         console.error("error in weight assignment: ", err);
     }
 }   
+
+export function priorityAssignment(candidates, orderedWeights) {
+    
+    const cpy = new techGraph(candidates);
+
+    // for normalization
+    let costMin = Infinity;
+    let costMax = -Infinity;
+
+    for (const [name, node] of cpy.graph.entries()) {
+        const techCost = Number(node.cost);
+
+        if (techCost >= costMax) {
+            costMax = techCost;
+        }
+        if (techCost <= costMin) {
+            costMin = techCost;
+        }
+    }
+    
+    const weightMin = Number(orderedWeights[0].weight);
+    const weightMax = Number(orderedWeights[orderedWeights.length - 1].weight);
+
+    for (const { name, weight } of orderedWeights) {
+        const techCost = Number(cpy.getCost(name));
+
+        // normalize cost
+        const normCost = (techCost - costMin) / (costMax - costMin);
+        // normalize weight
+        const normWeight = (weight - weightMin) / (weightMax - weightMin);
+
+        // compute and set priority
+        const val = cpy.graph.get(name);
+        val.weight = weight;
+        val.priority = (normWeight + 0.01) / (normCost + 0.01);
+        cpy.graph.set(name, val);
+    }
+
+    return cpy;
+}
 
 export function costCap(cost){
 
