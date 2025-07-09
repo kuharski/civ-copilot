@@ -1,4 +1,5 @@
 import techGraph from "./techGraph.js";
+import { MaxPriorityQueue } from '@datastructures-js/priority-queue';
 import dotenv from "dotenv";
 dotenv.config();
 import OpenAI from "openai";
@@ -33,20 +34,20 @@ export async function weightAssignment(candidates, leaderStrat, playerScenario) 
             Be rigorous and tactical, like an advanced Civ V player advising a tournament-level game.
             `;
 
-        const techList = Array.from(candidates.graph.values()).map((tech)=> {
-            
+        const techList = Array.from(candidates.graph.values()).map((tech) => {
+
             const units = tech.units && tech.units.length > 0 ?
-                          tech.units.map(u => `{${u.name}}`).join(", ") : "None";
+                tech.units.map(u => `{${u.name}}`).join(", ") : "None";
 
             const buildings = tech.buildings && tech.buildings.length > 0 ?
-                          tech.buildings.map(b => `{${b.name}}`).join(", ") : "None";              
+                tech.buildings.map(b => `{${b.name}}`).join(", ") : "None";
             return `Technology: ${tech.name}\nUnit Unlocks: ${units}\nBuildings Unlocks: ${buildings}`;
         });
         const message = [
-        `${leaderStrat}`,
-        `Player Scenario:\n ${playerScenario}`,
-        `List of Technologies:\n${techList}`,
-        `Please analyze and return the weighted list of Technologies in structured JSON format as described.`].join("\n\n");
+            `${leaderStrat}`,
+            `Player Scenario:\n ${playerScenario}`,
+            `List of Technologies:\n${techList}`,
+            `Please analyze and return the weighted list of Technologies in structured JSON format as described.`].join("\n\n");
 
         // Call LLM
         const response = await client.chat.completions.create({
@@ -107,10 +108,10 @@ export async function weightAssignment(candidates, leaderStrat, playerScenario) 
     } catch (err) {
         console.error("error in weight assignment: ", err);
     }
-}   
+}
 
 export function priorityAssignment(candidates, orderedWeights) {
-    
+
     const cpy = new techGraph(candidates);
 
     // for normalization
@@ -127,7 +128,7 @@ export function priorityAssignment(candidates, orderedWeights) {
             costMin = techCost;
         }
     }
-    
+
     const weightMin = Number(orderedWeights[0].weight);
     const weightMax = Number(orderedWeights[orderedWeights.length - 1].weight);
 
@@ -149,21 +150,59 @@ export function priorityAssignment(candidates, orderedWeights) {
     return cpy;
 }
 
-export function costCap(cost){
+export function priorityTopoSort(ancestors) {
+    const cpy = new techGraph(ancestors);
 
-    if(0 <= cost <= 55) { //ancient
+    let ordering = [];
+    // next to be picked for ordering
+    const readyQueue = new MaxPriorityQueue((node) => node.priority);
+    // degree updates handled directly in cpy.graph
+    // preprocessing
+    for (const [key, node] of cpy.graph) {
+        node.degree = node.prereqs.length;
+
+        if (node.degree === 0) {
+            readyQueue.enqueue(node);
+        }
+    }
+    //console.log(readyQueue.toArray());
+    while (!readyQueue.isEmpty()) {
+        // fifo among ties
+        const next = readyQueue.dequeue();
+
+        (next.postreqs || []).forEach((name) => {
+            // update degree of postreq in cpy.graph
+            console.log(name);
+            const postNode = cpy.graph.get(name);
+            console.log(postNode);
+            postNode.degree -= 1;
+            if (postNode.degree === 0) {
+                readyQueue.enqueue(postNode);
+            }
+            cpy.graph.set(name, postNode);
+        });
+        // push onto ordering
+        ordering.push(next.name);
+    }
+
+    return ordering;
+}
+
+export function costCap(cost) {
+    console.log(`COST GIVEN TO COSTCAP: ${cost}`);
+    if (0 <= cost && cost <= 55) { //ancient
         return 175;
-    } else if(55 < cost <= 175) { //classical
+    } else if (55 < cost && cost <= 175) { //classical
         return 485;
-    } else if(175 < cost <= 485) { //medieval
+    } else if (175 < cost && cost <= 485) { //medieval
         return 1150;
-    } else if(485 < cost <= 1150) { // renaissance
+    } else if (485 < cost && cost <= 1150) { // renaissance
         return 2350;
-    } else if(1150 < cost <= 2350) { // industrial
+    } else if (1150 < cost && cost <= 2350) { // industrial
         return 4100;
-    } else if(2350 < cost <= 4100) { // modern
+    } else if (2350 < cost && cost <= 4100) { // modern
         return 6400;
-    } else if(4100 < cost <= 6400) { // atomic
+    } else if (4100 < cost && cost <= 6400) { // atomic
         return 10000;
     } else {
         return 10000;
