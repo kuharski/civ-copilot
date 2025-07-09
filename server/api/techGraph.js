@@ -36,13 +36,14 @@ export default class techGraph {
                 units: tech.unitUnlocks,
                 buildings: tech.buildingUnlocks,
                 weight: -1,
-                priority: -1
+                priority: -1,
+                degree: -1
             });
         });
     }
 
     getCost(tech) {
-        return this.graph?.get(tech).cost;
+        return Number(this.graph?.get(tech).cost);
     }
 
     /**
@@ -100,7 +101,7 @@ export default class techGraph {
                 this.#buildAncestorGraph(bluePrint, creation, parent);
             });
         }
-
+        //console.log(`added ${start} to ancestors`);
         creation.graph.set(start, node);
     }
 
@@ -126,6 +127,16 @@ export default class techGraph {
         targetNodes.forEach((key) => {
             this.#buildAncestorGraph(candidates, ancestor, key);
         });
+
+        // remove references to deleted nodes
+        for (const [key, node] of ancestor.graph) {
+            if(node?.postreqs && node.postreqs.length > 0) {
+                node.postreqs = node.postreqs.filter(key => ancestor.graph.has(key));
+            }
+            if(node?.prereqs && node.prereqs.length > 0) {
+                node.prereqs = node.prereqs.filter(key => ancestor.graph.has(key));
+            }
+        }
 
         return ancestor;
     }
