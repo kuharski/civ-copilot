@@ -1,15 +1,15 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 1000,
-  headers: {'Content-Type': 'application/json'}
+    baseURL: '/api',
+    timeout: 1000,
+    headers: { 'Content-Type': 'application/json' }
 });
 
-import { HealthResponse } from '../types/utils';
+import { HealthResponse } from '../utils/types';
 
 const fetchHealth = async (): Promise<HealthResponse | null> => {
-    try{
+    try {
         const response = await api.get<HealthResponse>('/health');
         return response.data;
     } catch (error) {

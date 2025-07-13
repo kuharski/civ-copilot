@@ -1,4 +1,4 @@
-import { OverviewProps } from "../types/utils";
+import { OverviewProps } from "../utils/types";
 import { Info } from 'lucide-react';
 
 export default function StrategyCard({ civ }: OverviewProps) {

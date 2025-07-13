@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Navigation, useNavigate } from 'react-router';
-import { CivPreview, PreviewProps } from '../types/utils';
-import { fetchCiv, fetchCivPreview } from '../api/hallofleaders';
+import { PreviewProps } from '../utils/types';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { fetchCivPreview } from '../../api/hallofleaders';
-import { CivPreview } from '../../types/utils';
+import { fetchCivPreview } from '../../api/fetch';
+import { CivPreview } from '../../utils/types';
 import Loading from '../../components/Loading';
 import Carousel from '../../components/Carousel';
 import SearchBar from '../../components/SearchBar';
@@ -14,7 +14,7 @@ export default function Selection() {
         const getCivs = async () => {
             let data = await fetchCivPreview();
             let idx = data.length;
-            while(idx != 0) {
+            while(idx !== 0) {
                 let ranIdx = Math.floor(Math.random() * idx);
                 idx--;
                 [data[idx], data[ranIdx]] = [data[ranIdx], data[idx]];

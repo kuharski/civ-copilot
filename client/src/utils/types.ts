@@ -1,4 +1,3 @@
-import { S } from "react-router/dist/development/register-DCE0tH5m";
 
 export interface HealthResponse {
   status: string;
@@ -88,4 +87,11 @@ export interface Civ {
     general: string;
     counter: string;
   };
+};
+
+export interface Tech {
+  name: string,
+  cost: string,
+  icon: string,
+  prereqs: string[]
 };

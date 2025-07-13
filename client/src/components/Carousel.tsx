@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-import { PreviewProps } from '../types/utils';
+import { PreviewProps } from '../utils/types';
 import '../styles/swiper.css';
 import 'swiper/css';
 import 'swiper/css/navigation';

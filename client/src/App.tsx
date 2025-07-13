@@ -2,6 +2,7 @@ import Layout from './routes/Layout';
 import Home from './routes/Home';
 import Selection from './routes/leader/Selection';
 import Overview from './routes/leader/Overview';
+import Prioritizer from './routes/Prioritizer';
 import NotFound from './components/NotFound';
 import { Route, Routes } from 'react-router';
 
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="selection" element={ <Selection /> }/>
             <Route path="overview/:civilization" element={ <Overview /> } />
           </Route>
+          <Route path="science-advisor" element={ <Prioritizer /> } />
           <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

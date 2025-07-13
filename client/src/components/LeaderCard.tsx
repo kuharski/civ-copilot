@@ -1,4 +1,4 @@
-import { OverviewProps } from "../types/utils";
+import { OverviewProps } from "../utils/types";
 
 export default function LeaderCard( {civ}: OverviewProps) {
 

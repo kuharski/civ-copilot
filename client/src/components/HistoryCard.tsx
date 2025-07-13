@@ -1,4 +1,4 @@
-import { OverviewProps } from '../types/utils';
+import { OverviewProps } from '../utils/types';
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 

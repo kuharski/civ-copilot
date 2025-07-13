@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchCiv } from '../../api/hallofleaders';
+import { fetchCiv } from '../../api/fetch';
 import { useParams } from 'react-router';
 import Loading from '../../components/Loading';
 import HistoryCard from '../../components/HistoryCard';
@@ -7,7 +7,7 @@ import StrategyCard from '../../components/StrategyCard';
 import UniqueCards from '../../components/UniqueCards';
 import LeaderCard from '../../components/LeaderCard';
 import NotFound from '../../components/NotFound';
-import { Civ } from '../../types/utils';
+import { Civ } from '../../utils/types';
 
 export default function Overview() {
 
