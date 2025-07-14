@@ -28,7 +28,7 @@ export default function Overview() {
         };
 
         getCiv();
-    }, []);
+    }, [civilization]);
 
     if(loading) {
         return(

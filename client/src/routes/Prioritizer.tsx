@@ -5,14 +5,13 @@ import TechNode from '../components/TechCard';
 import 'reactflow/dist/style.css';
 import React, { useEffect, useState, useCallback } from 'react';
 import {
-  Background,
   ReactFlow,
   Node,
   Edge,
   useNodesState,
   useEdgesState,
   Position,
-  MarkerType
+  MarkerType,
 } from 'reactflow';
 import dagre from 'dagre';
 
@@ -26,7 +25,7 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'LR') => 
     dagreGraph.setGraph({ 
         rankdir: direction, 
         ranker: 'network-simplex', 
-        nodesep: 100, 
+        nodesep: 120, 
         ranksep: 200,
     });
     
@@ -58,12 +57,31 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'LR') => 
     return { nodes: newNodes, edges };
 };
 
+const ancestors = (start: string, map: Map<string, Tech>): string[] => {
+
+    const result: string[] = [];
+
+    const dfs = (id: string) => {
+
+        const tech = map.get(id);
+        if(tech?.prereqs) {
+            tech?.prereqs.forEach((prereq => dfs(prereq)));
+        }
+        result.push(id);
+    };
+
+    dfs(start);
+    return result;
+}
+
 export default function Prioritizer() {
 
     const [civs, civsState] = useState<CivPreview[]>([]);
     const [techs, techState] = useState<Tech[]>([]);
+    const [techMap, setTechMap] = useState<Map<string, Tech>>(new Map());
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     // retrieve data
@@ -73,10 +91,33 @@ export default function Prioritizer() {
             let techData = await fetchTechs();
             civsState(civData);
             techState(techData);
+            const map = new Map<string, Tech>();
+            techData.forEach((tech) => {
+                map.set(tech.name, tech);
+            });
+            setTechMap(map);
             setLoading(false);
         };
         getInfo();
     }, []);
+
+    const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
+    setSelectedTechs((prev) => {
+        // only select nodes
+        const updated = ancestors(node.id, techMap);
+        const result = Array.from(new Set([...prev, ...updated]));
+
+        // update visuals
+        setNodes((nds) =>
+            nds.map((n) => (
+                { ...n, data: { ...n.data, selected: result.includes(n.id) }}
+            ))
+        );
+
+        // update selected
+        return result;
+    });
+    }, [techMap, setNodes]);
 
     useEffect(() => {
         const computeGraph = () => {
@@ -88,7 +129,8 @@ export default function Prioritizer() {
                     data: { 
                         name: t.name,
                         cost: t.cost,
-                        icon: t.icon
+                        icon: t.icon,
+                        prereqs: t.prereqs
                     },
                     position: { x: 0, y: 0 },
                     draggable: false,
@@ -110,6 +152,7 @@ export default function Prioritizer() {
                     style: {        
                         stroke: '#BBB',
                         strokeWidth: 2,
+                        cursor: 'default'
                     },
                 }))
                 );
@@ -119,6 +162,7 @@ export default function Prioritizer() {
                     initialEdges,
                     'LR',
                 );
+            
                 setNodes(layoutedNodes);
                 setEdges(layoutedEdges);
             }
@@ -164,17 +208,45 @@ export default function Prioritizer() {
                         Our advisors will craft your optimal tech path to victory.
                     </p> 
                 </div>
-                <div className="w-full h-[80vh] rounded-xl border-4 border-[#5b9bd5] lg:mx-10 mx-5 p-4 overflow-hidden">
+                <h1>Selected: {selectedTechs}</h1>
+                <div className="w-[80vw] h-[80vh] rounded-xl border-4 border-[#5b9bd5] overflow-hidden bg-surface">
                     <ReactFlow
                         nodes={nodes}
                         edges={edges}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
+                        onNodeClick={onNodeClick}
                         nodeTypes={nodeTypes}
+                        nodesDraggable={false}
                         nodesConnectable={false}
                         fitView
                     >
-                    <Background />
+                    <div className="absolute top-5 left-5 z-10">
+                        <button
+                        className="bg-[#434f61] border-4 border-red-500 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
+                        onClick={() => {
+                            setSelectedTechs([]);
+                            // visuals
+                            setNodes((nds) =>
+                                nds.map((n) => ({
+                                    ...n, data: { ...n.data, selected: false },
+                                }))
+                            );
+                        }}
+                        >
+                        Reset Technology Selection
+                        </button>
+                    </div>
+                    <div className="absolute top-20 md:top-5 right-5 z-10">
+                        <button
+                        className="bg-[#434f61] border-4 border-green-600 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
+                        onClick={() => {
+                            // submit POST
+                        }}
+                        >
+                        Submit Your Plan
+                        </button>
+                    </div>
                     </ReactFlow>
                 </div>
             </div>

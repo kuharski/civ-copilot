@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.react-flow__edge-simplebezier path {
+  cursor: default !important;
+}
+.react-flow__attribution {
+  display: none !important;
+}
