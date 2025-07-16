@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { CivPreview } from '../utils/types';
-import { Civ, Tech } from '../utils/types';
+import { Civ, CivPreview, Tech, OptimalTechs } from '../utils/types';
 
 const api = axios.create({
     baseURL: '/api',
@@ -27,3 +26,17 @@ export async function fetchTechs(): Promise<Tech[]> {
     const response = await api.get<Tech[]>('/techs');
     return response.data;
 }
+
+export async function fetchOptimalOrdering(leader: string, playscenario: string, currTechs: string[]): Promise<OptimalTechs | null> {
+    try {
+        const response = await api.post<OptimalTechs>('/techs', {
+            leader: leader,
+            playerScenario: playscenario,
+            techs: currTechs
+        });
+
+        return response.data;
+    } catch (error) {
+        return null;
+    }
+} 

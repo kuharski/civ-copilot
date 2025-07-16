@@ -2,6 +2,7 @@ import { fetchCivPreview, fetchTechs } from '../api/fetch';
 import { CivPreview, Tech } from '../utils/types';
 import Loading from '../components/Loading';
 import SearchBarTechs from '../components/SearchBarTechs';
+import ScenarioInput from '../components/ScenarioInput';
 import TechNode from '../components/TechCard';
 import 'reactflow/dist/style.css';
 import React, { useEffect, useState, useCallback } from 'react';
@@ -79,6 +80,7 @@ export default function Prioritizer() {
 
     const [civs, civsState] = useState<CivPreview[]>([]);
     const [selectedCiv, setSelectedCiv] = useState<CivPreview | null>(null);
+    const [scenario, setScenario] = useState<string>('');
     const [techs, techState] = useState<Tech[]>([]);
     const [techMap, setTechMap] = useState<Map<string, Tech>>(new Map());
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -187,27 +189,29 @@ export default function Prioritizer() {
             </div>
             <div className="flex flex-col lg:flex-row justify-evenly items-center my-12 w-full">
                 {/* instructions */}
-                <div className="flex flex-col justify-center items-center mb-12 lg:mb-0 mx-6 lg:mx-0 max-w-2xs md:max-w-2xs bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
+                <div className="flex flex-col justify-center items-center mb-12 lg:mb-0 mx-6 lg:mx-0 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
                     <h3 className="text-2xl md:text-3xl">Scholar's Guidebook</h3>
-                    <p className="text-xl md:text-2xl mt-2">1. Describe your scenario</p>
+                    <p className="text-xl md:text-2xl mt-2">1. Describe Your Scenario</p>
                     <p className="text-sm sm:text-base mt-2 text-justify">
                         Share your strategies, goals, or challenges.
                     </p>
-                    <p className="text-xl md:text-2xl mt-2">2. Choose your leader</p>
+                    <p className="text-xl md:text-2xl mt-2">2. Choose Your Civilization</p>
                     <p className="text-sm sm:text-base mt-2 text-justify">
-                        Select the leader shaping your empire's destiny.
+                        Confirm the civilization you command.
                     </p>
-                    <p className="text-xl md:text-2xl mt-2">3. Mark known technologies</p>
+                    <p className="text-xl md:text-2xl mt-2">3. Mark Known Technologies</p>
                     <p className="text-sm sm:text-base mt-2 text-justify">
-                        Tell us what your people have already mastered
+                        Tell us what your people have already mastered.
                     </p>
-                    <p className="text-xl md:text-2xl mt-2">4. Submit your plan</p>
+                    <p className="text-xl md:text-2xl mt-2">4. Submit Your Plan</p>
                     <p className="text-sm sm:text-base mt-2 text-justify">
                         Our advisors will craft your optimal tech path.
                     </p> 
                 </div>
+                {/* scenario text input */}
+                <ScenarioInput scenario={scenario} setScenario={setScenario} />
                 {/* civ searchbar */}
-                <div className="flex flex-col">
+                <div className="flex flex-col my-12">
                     {!selectedCiv ? (
                         <div className="relative mx-auto size-40 lg:size-44 group mb-6">
                                 <img src={"/default-civ.png"} alt={"Default Civ"} className="rounded-full relative w-full h-full object-cover drop-shadow-[0_0_12px_rgba(248,198,33,0.8)]" />
@@ -220,7 +224,8 @@ export default function Prioritizer() {
                     <SearchBarTechs civs={civs} selectedCiv={selectedCiv} setSelectedCiv={setSelectedCiv}/>
                 </div>
             </div>
-            <h1 className="mb-12">Selected: {selectedCiv?.civ.name}</h1>
+            <h1 className="mb-12">Selected: {scenario}</h1>
+            <h1 className="mb-12">Selected: {selectedCiv?.leader.name}</h1>
             <div className="w-[80vw] h-[80vh] rounded-xl border-4 border-[#5b9bd5] overflow-hidden bg-surface">
                 <ReactFlow
                     nodes={nodes}

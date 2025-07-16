@@ -183,7 +183,7 @@ app.post('/api/techs', async (req, res) => {
     //   "ordering": finalOrdering
     //  });
 
-    res.json({ "ordering": finalOrdering });
+    res.json({ "ordering": finalOrdering, "targets": targets });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });

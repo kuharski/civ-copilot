@@ -172,9 +172,9 @@ export function priorityTopoSort(ancestors) {
 
         (next.postreqs || []).forEach((name) => {
             // update degree of postreq in cpy.graph
-            console.log(name);
+            // console.log(name);
             const postNode = cpy.graph.get(name);
-            console.log(postNode);
+            // console.log(postNode);
             postNode.degree -= 1;
             if (postNode.degree === 0) {
                 readyQueue.enqueue(postNode);

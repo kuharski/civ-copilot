@@ -95,3 +95,9 @@ export interface Tech {
   icon: string,
   prereqs: string[]
 };
+
+export interface OptimalTechs {
+
+  ordering: string[];
+  targets: string[];
+};
