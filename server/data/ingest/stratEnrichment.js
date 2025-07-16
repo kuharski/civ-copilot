@@ -15,7 +15,7 @@ export default async function enrichStrats() {
 
     try {
         const allCivs = await Civilization.find({ "strategy.primaryVictory": null });
-
+        // const civs = allCivs.filter(doc=> doc.civ.name === "Poland" || doc.civ.name === "Portugal" || doc.civ.name === "The Shoshone");
         for (const doc of allCivs) {
 
             const units = [];

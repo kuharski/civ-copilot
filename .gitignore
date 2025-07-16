@@ -5,3 +5,4 @@ node_modules/
 docker-compose.override.yml
 **/.docker/
 mongo-data
+backup/civdb/

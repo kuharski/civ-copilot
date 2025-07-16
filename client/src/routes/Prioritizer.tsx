@@ -1,6 +1,7 @@
 import { fetchCivPreview, fetchTechs } from '../api/fetch';
 import { CivPreview, Tech } from '../utils/types';
 import Loading from '../components/Loading';
+import SearchBarTechs from '../components/SearchBarTechs';
 import TechNode from '../components/TechCard';
 import 'reactflow/dist/style.css';
 import React, { useEffect, useState, useCallback } from 'react';
@@ -77,6 +78,7 @@ const ancestors = (start: string, map: Map<string, Tech>): string[] => {
 export default function Prioritizer() {
 
     const [civs, civsState] = useState<CivPreview[]>([]);
+    const [selectedCiv, setSelectedCiv] = useState<CivPreview | null>(null);
     const [techs, techState] = useState<Tech[]>([]);
     const [techMap, setTechMap] = useState<Map<string, Tech>>(new Map());
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -183,72 +185,81 @@ export default function Prioritizer() {
             <div className="flex flex-col justify-center items-center">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl mt-12">The Scholar's Table</h1>
             </div>
-            <div className="flex flex-col justify-center items-center gap-6 my-10 w-full">
+            <div className="flex flex-col lg:flex-row justify-evenly items-center my-12 w-full">
                 {/* instructions */}
-                <div className="flex flex-col justify-center items-center max-w-80 md:max-w-96 w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
-                    <h3 className="text-3xl md:text-4xl">Victory Focus</h3>
-                    <p className="text-sm md:text-lg mt-2 text-justify">
-                        Your civilization stands at the threshold of greatness. 
-                        To guide it toward glory, you must chart a wise course through the ages of technology.
+                <div className="flex flex-col justify-center items-center mb-12 lg:mb-0 mx-6 lg:mx-0 max-w-2xs md:max-w-2xs bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
+                    <h3 className="text-2xl md:text-3xl">Scholar's Guidebook</h3>
+                    <p className="text-xl md:text-2xl mt-2">1. Describe your scenario</p>
+                    <p className="text-sm sm:text-base mt-2 text-justify">
+                        Share your strategies, goals, or challenges.
                     </p>
-                    <p className="text-lg md:text-2xl mt-2">1. Choose your leader</p>
-                    <p className="text-sm md:text-lg mt-2 text-justify">
-                        Select the visionary who will shape your empire’s unique path.
+                    <p className="text-xl md:text-2xl mt-2">2. Choose your leader</p>
+                    <p className="text-sm sm:text-base mt-2 text-justify">
+                        Select the leader shaping your empire's destiny.
                     </p>
-                    <p className="text-lg md:text-2xl mt-2">2. Mark known technologies</p>
-                    <p className="text-sm md:text-lg mt-2 text-justify">
-                        Tell us what your people have already mastered.
+                    <p className="text-xl md:text-2xl mt-2">3. Mark known technologies</p>
+                    <p className="text-sm sm:text-base mt-2 text-justify">
+                        Tell us what your people have already mastered
                     </p>
-                    <p className="text-lg md:text-2xl mt-2">3. Describe your scenario</p>
-                    <p className="text-sm md:text-lg mt-2 text-justify">
-                        Share your strategy, goals, or challenges ahead.
-                    </p>
-                    <p className="text-lg md:text-2xl mt-2">4. Submit your plan</p>
-                    <p className="text-sm md:text-lg mt-2 text-justify">
-                        Our advisors will craft your optimal tech path to victory.
+                    <p className="text-xl md:text-2xl mt-2">4. Submit your plan</p>
+                    <p className="text-sm sm:text-base mt-2 text-justify">
+                        Our advisors will craft your optimal tech path.
                     </p> 
                 </div>
-                <h1>Selected: {selectedTechs}</h1>
-                <div className="w-[80vw] h-[80vh] rounded-xl border-4 border-[#5b9bd5] overflow-hidden bg-surface">
-                    <ReactFlow
-                        nodes={nodes}
-                        edges={edges}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        onNodeClick={onNodeClick}
-                        nodeTypes={nodeTypes}
-                        nodesDraggable={false}
-                        nodesConnectable={false}
-                        fitView
-                    >
-                    <div className="absolute top-5 left-5 z-10">
-                        <button
-                        className="bg-[#434f61] border-4 border-red-500 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
-                        onClick={() => {
-                            setSelectedTechs([]);
-                            // visuals
-                            setNodes((nds) =>
-                                nds.map((n) => ({
-                                    ...n, data: { ...n.data, selected: false },
-                                }))
-                            );
-                        }}
-                        >
-                        Reset Technology Selection
-                        </button>
-                    </div>
-                    <div className="absolute top-20 md:top-5 right-5 z-10">
-                        <button
-                        className="bg-[#434f61] border-4 border-green-600 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
-                        onClick={() => {
-                            // submit POST
-                        }}
-                        >
-                        Submit Your Plan
-                        </button>
-                    </div>
-                    </ReactFlow>
+                {/* civ searchbar */}
+                <div className="flex flex-col">
+                    {!selectedCiv ? (
+                        <div className="relative mx-auto size-40 lg:size-44 group mb-6">
+                                <img src={"/default-civ.png"} alt={"Default Civ"} className="rounded-full relative w-full h-full object-cover drop-shadow-[0_0_12px_rgba(248,198,33,0.8)]" />
+                        </div>
+                    ) : (
+                        <div className="relative mx-auto size-40 lg:size-44 hover:cursor-pointer group mb-6">
+                                <img src={selectedCiv.civ.icon} alt={selectedCiv.civ.name} className="rounded-full relative w-full h-full object-cover drop-shadow-[0_0_12px_rgba(248,198,33,0.8)]" />
+                        </div>
+                    )}
+                    <SearchBarTechs civs={civs} selectedCiv={selectedCiv} setSelectedCiv={setSelectedCiv}/>
                 </div>
+            </div>
+            <h1 className="mb-12">Selected: {selectedCiv?.civ.name}</h1>
+            <div className="w-[80vw] h-[80vh] rounded-xl border-4 border-[#5b9bd5] overflow-hidden bg-surface">
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onNodeClick={onNodeClick}
+                    nodeTypes={nodeTypes}
+                    nodesDraggable={false}
+                    nodesConnectable={false}
+                    fitView
+                >
+                <div className="absolute top-5 left-5 z-10">
+                    <button
+                    className="bg-[#434f61] border-4 border-red-500 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
+                    onClick={() => {
+                        setSelectedTechs([]);
+                        // visuals
+                        setNodes((nds) =>
+                            nds.map((n) => ({
+                                ...n, data: { ...n.data, selected: false },
+                            }))
+                        );
+                    }}
+                    >
+                    Reset Technology Selection
+                    </button>
+                </div>
+                <div className="absolute top-20 md:top-5 right-5 z-10">
+                    <button
+                    className="bg-[#434f61] border-4 border-green-600 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
+                    onClick={() => {
+                        // submit POST
+                    }}
+                    >
+                    Submit Your Plan
+                    </button>
+                </div>
+                </ReactFlow>
             </div>
         </div>
     );
