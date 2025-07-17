@@ -3,7 +3,7 @@ import { Civ, CivPreview, Tech, OptimalTechs } from '../utils/types';
 
 const api = axios.create({
     baseURL: '/api',
-    timeout: 1000,
+    timeout: 5000,
     headers: { 'Content-Type': 'application/json' }
 });
 
@@ -27,16 +27,26 @@ export async function fetchTechs(): Promise<Tech[]> {
     return response.data;
 }
 
-export async function fetchOptimalOrdering(leader: string, playscenario: string, currTechs: string[]): Promise<OptimalTechs | null> {
+
+export async function fetchOptimalOrdering(leader: string, playerScenario: string, techs: string[]): Promise<OptimalTechs> {
+    // console.log(`CLIENT SENDING: ${leader} AND ${playerScenario} AND ${techs}`);
     try {
-        const response = await api.post<OptimalTechs>('/techs', {
-            leader: leader,
-            playerScenario: playscenario,
-            techs: currTechs
+        const response = await api.post('/techs', {
+            leader,
+            playerScenario,
+            techs
         });
 
+        // console.log('CLIENT RECEIVED:', response);
+        // console.log('CLIENT RECEIVED DATA:', response.data);
+        
         return response.data;
-    } catch (error) {
-        return null;
+    } catch (err: any) {
+        // console.error('FETCH ERROR:', err.message);
+        if (err.response) {
+            // console.error('RESPONSE STATUS:', err.response.status);
+            // console.error('RESPONSE DATA:', err.response.data);
+        }
+        throw err;
     }
-} 
+}

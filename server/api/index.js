@@ -111,6 +111,7 @@ app.post('/api/techs', async (req, res) => {
 
   try {
     const { leader, playerScenario, techs } = req.body;
+    // console.log(`SERVER RECEIVED: ${leader} AND ${playerScenario} AND ${techs}`);
     const cpy = new techGraph(base);
 
     // find highest cost tech
@@ -175,15 +176,16 @@ app.post('/api/techs', async (req, res) => {
     // generate final ordering
     const finalOrdering = priorityTopoSort(ancestors);
 
-    // for debugging
-    // res.json({ "weighted": weighted, "ordered": orderedWeights,
-    //   "priorities": Array.from(weightedCandidates.graph.values()).map(val => (`name: ${val.name} cost: ${val.cost} weight: ${val.weight} priority: ${val.priority}`)),
-    //   "targets": targets,
-    //   "ancestors": Array.from(ancestors.graph).map(([key, node]) => (`${node.name}: post reqs: ${node.postreqs}`)),
-    //   "ordering": finalOrdering
-    //  });
+    // // for debugging
+    // // res.json({ "weighted": weighted, "ordered": orderedWeights,
+    // //   "priorities": Array.from(weightedCandidates.graph.values()).map(val => (`name: ${val.name} cost: ${val.cost} weight: ${val.weight} priority: ${val.priority}`)),
+    // //   "targets": targets,
+    // //   "ancestors": Array.from(ancestors.graph).map(([key, node]) => (`${node.name}: post reqs: ${node.postreqs}`)),
+    // //   "ordering": finalOrdering
+    // //  });
+    // console.log(` SERVER SENDING: ${finalOrdering} AND ${targets}`);
+    res.status(200).json({ "ordering": finalOrdering, "targets": targets });
 
-    res.json({ "ordering": finalOrdering, "targets": targets });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });

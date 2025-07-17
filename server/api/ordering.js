@@ -189,7 +189,7 @@ export function priorityTopoSort(ancestors) {
 }
 
 export function costCap(cost) {
-    console.log(`COST GIVEN TO COSTCAP: ${cost}`);
+    //console.log(`COST GIVEN TO COSTCAP: ${cost}`);
     if (0 <= cost && cost <= 55) { //ancient
         return 175;
     } else if (55 < cost && cost <= 175) { //classical

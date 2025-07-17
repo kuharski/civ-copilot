@@ -97,7 +97,6 @@ export interface Tech {
 };
 
 export interface OptimalTechs {
-
   ordering: string[];
   targets: string[];
 };

@@ -1,5 +1,5 @@
-import { fetchCivPreview, fetchTechs } from '../api/fetch';
-import { CivPreview, Tech } from '../utils/types';
+import { fetchCivPreview, fetchTechs, fetchOptimalOrdering } from '../api/fetch';
+import { CivPreview, Tech, OptimalTechs } from '../utils/types';
 import Loading from '../components/Loading';
 import SearchBarTechs from '../components/SearchBarTechs';
 import ScenarioInput from '../components/ScenarioInput';
@@ -80,14 +80,49 @@ export default function Prioritizer() {
 
     const [civs, civsState] = useState<CivPreview[]>([]);
     const [selectedCiv, setSelectedCiv] = useState<CivPreview | null>(null);
+    const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
     const [scenario, setScenario] = useState<string>('');
+    const [submitting, setSubmitting] = useState(false);
+    const [resultTechs, setResultTechs] = useState<string[] | null>(null);
+    const [resultTargets, setResultTargets] = useState<string[] | null>(null);
     const [techs, techState] = useState<Tech[]>([]);
     const [techMap, setTechMap] = useState<Map<string, Tech>>(new Map());
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-    const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
+    const handleSubmit = async () => {
+
+        if (!selectedCiv) return;
+
+        setSubmitting(true);
+
+        try {
+            let res = await fetchOptimalOrdering(selectedCiv.leader.name, scenario, selectedTechs);
+            // console.log('RES ORDERING:', res.ordering);
+            // console.log('RES TARGETS:', res.targets);
+            setResultTechs(res.ordering);
+            setResultTargets(res.targets);
+            setSubmitting(false);
+        } catch (err) {
+            console.error('submit error:', err);
+            alert('failed to submit plan');
+        }
+    }
+
+    const handleReset = () => {
+        setResultTechs(null);
+        setResultTargets(null);
+        setScenario("");
+        setSelectedCiv(null);
+        setSelectedTechs([]);
+        // visuals
+        setNodes((nds) =>
+            nds.map((n) => ({
+                ...n, data: { ...n.data, selected: false, ranked: -1, target: false },
+            }))
+        );
+    };
     // retrieve data
     useEffect(() => {
         const getInfo = async () => {
@@ -134,7 +169,10 @@ export default function Prioritizer() {
                         name: t.name,
                         cost: t.cost,
                         icon: t.icon,
-                        prereqs: t.prereqs
+                        prereqs: t.prereqs,
+                        selected: false,
+                        ranked: -1,
+                        target: false
                     },
                     position: { x: 0, y: 0 },
                     draggable: false,
@@ -166,18 +204,69 @@ export default function Prioritizer() {
                     initialEdges,
                     'LR',
                 );
-            
-                setNodes(layoutedNodes);
+                const finalNodes = layoutedNodes.map(n => {
+                const isSelected = selectedTechs.includes(n.id);
+                const rankIndex = resultTechs?.indexOf(n.id) ?? -1;
+                const isTarget = resultTargets?.includes(n.id) ?? false;
+
+                return {
+                    ...n,
+                    data: {
+                    ...n.data,
+                    selected: isSelected,
+                    ranked: rankIndex >= 0 ? rankIndex + 1 : -1,
+                    target: isTarget
+                    }
+                };
+                });
+                setNodes(finalNodes);
                 setEdges(layoutedEdges);
             }
         };
         computeGraph();
-    }, [loading, techs, setNodes, setEdges]);
+    }, [loading, techs, selectedTechs, resultTechs, resultTargets, setNodes, setEdges]);
 
-    if(loading) {
+    if(loading || submitting) {
         return(
             <div className="flex flex-col flex-1 items-center justify-center h-full">
                 <div className="flex flex-1 items-center justify-center h-full w-full"><Loading /></div>
+            </div>
+        );
+    }
+
+    if (resultTechs) {
+
+        return(
+            <div className="flex flex-col items-center justify-center text-text mb-12">
+                <div className="flex flex-col justify-center items-center">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl mt-12">Your Optimal Tech Path</h1>
+                </div>
+                <div className="flex flex-col justify-center items-center">
+                    <p className="text-base">Ordering: {JSON.stringify(resultTechs)}</p>
+                    <p className="text-base">Targets: {JSON.stringify(resultTargets)}</p>
+                </div>
+                <div className="w-[80vw] h-[80vh] rounded-xl border-4 border-[#5b9bd5] overflow-hidden bg-surface">
+                    <ReactFlow
+                        nodes={nodes}
+                        edges={edges}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        nodeTypes={nodeTypes}
+                        nodesDraggable={false}
+                        nodesConnectable={false}
+                        nodesFocusable={false}
+                        fitView
+                    >
+                    <div className="absolute top-5 left-5 z-10">
+                        <button
+                        className="bg-[#434f61] border-4 border-amber-700 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
+                        onClick={handleReset}
+                        >
+                        Return to The Scholar's Table                        
+                        </button>
+                    </div>
+                    </ReactFlow>                
+                </div>
             </div>
         );
     }
@@ -226,6 +315,7 @@ export default function Prioritizer() {
             </div>
             <h1 className="mb-12">Selected: {scenario}</h1>
             <h1 className="mb-12">Selected: {selectedCiv?.leader.name}</h1>
+            <h1 className="mb-12">Selected: {selectedTechs}</h1>
             <div className="w-[80vw] h-[80vh] rounded-xl border-4 border-[#5b9bd5] overflow-hidden bg-surface">
                 <ReactFlow
                     nodes={nodes}
@@ -246,7 +336,7 @@ export default function Prioritizer() {
                         // visuals
                         setNodes((nds) =>
                             nds.map((n) => ({
-                                ...n, data: { ...n.data, selected: false },
+                                ...n, data: { ...n.data, selected: false, ranked: -1, target: false },
                             }))
                         );
                     }}
@@ -256,10 +346,9 @@ export default function Prioritizer() {
                 </div>
                 <div className="absolute top-20 md:top-5 right-5 z-10">
                     <button
+                    disabled={submitting}
                     className="bg-[#434f61] border-4 border-green-600 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
-                    onClick={() => {
-                        // submit POST
-                    }}
+                    onClick={handleSubmit}
                     >
                     Submit Your Plan
                     </button>
