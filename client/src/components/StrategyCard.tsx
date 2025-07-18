@@ -21,15 +21,15 @@ export default function StrategyCard({ civ }: OverviewProps) {
     return(
         <div className="relative flex flex-col justify-center items-center max-w-80 md:max-w-96 2xl:max-w-2xl lg:max-w-lg w-full mt-10 bg-surface rounded-3xl border-4 border-[#5b9bd5] p-6">
             <div className="absolute top-3 right-3 md:top-4 md:right-4 lg:top-6 lg:right-6 text-secondary group">
-                <Info className="size-7 md:size-8 lg:size-9 text-gray-500 hover:text-gray-700 transition-colors"/>
+                <Info className="size-7 md:size-8 lg:size-9 text-gray-500 hover:text-gray-700 transition-colors hover:cursor-pointer"/>
                 <div className="absolute right-10 lg:right-14 top-0 z-10 
-                                bg-white text-gray-800 shadow-lg rounded-xl p-4 w-48
+                                bg-background text-white shadow-lg rounded-xl p-4 w-48 md:w-72
                                 opacity-0 group-hover:opacity-100 
                                 pointer-events-none group-hover:pointer-events-auto
                                 transition-opacity duration-300">
                     <p className="text-center text-md md:text-lg">
-                        A strategy forged by <strong>advanced AI</strong>, your path to victory echoes the wisdom of the ancients.
-                        </p>
+                        A strategy forged by <strong>AI generals</strong>, guided by the past, optimized for triumph.
+                    </p>
                 </div>
             </div>
             <h3 className="text-3xl md:text-4xl">Victory Focus</h3>

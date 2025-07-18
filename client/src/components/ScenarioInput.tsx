@@ -32,17 +32,41 @@ export default function ScenarioInput({scenario, setScenario}: ScenarioProps) {
                 sx={{
                     '& .MuiInputBase-root': {
                     fontFamily: 'Georgia',
+                    color: '#FFFFFF',
+                    backgroundColor: '#1f1f25',
+
                     },
                     '& .MuiInputBase-input::placeholder': {
                         fontFamily: 'Georgia',
                         opacity: 1,
-                        color: '#1f1f25',
+                        color: '#CCCCCC',
                     },
                     '& input': {
                         fontFamily: 'Georgia',
+                        color: '#FFFFFF',
                     },
                     '& label': {
                         fontFamily: 'Georgia',
+                        color: '#FFFFFF',
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5b9bd5',
+                        borderWidth: '2px',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                        '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5b9bd5',
+                        borderWidth: '4px',
+                        transition: ' border-width 0.2s ease',
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5b9bd5',
+                        borderWidth: '2px',
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#5b9bd5',
+                        borderWidth: '2px',
+                        },
                     },
                     '& .MuiInput-underline:before': {
                         borderBottomColor: '#1f1f25',

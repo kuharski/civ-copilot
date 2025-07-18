@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 export default function SearchBar({civs}: PreviewProps) {
 
     const [typed, typedState] = useState("");
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     return(
         <Autocomplete
@@ -16,13 +17,19 @@ export default function SearchBar({civs}: PreviewProps) {
             popupIcon={null}
             options={civs}
             noOptionsText="No Civilizations Found"
+            open={open}
+            onOpen={() => setOpen(true)}
+            onClose={() => setOpen(false)}
             slotProps={{
                 paper: {
                 sx: {
-                    '& .MuiAutocomplete-noOptions': {
+                    backgroundColor: '#1f1f25',
+                    color: '#FFFFFF',
                     fontFamily: 'Georgia, serif',
-                    fontStyle: 'italic',
-                    fontSize: 14
+                    '& .MuiAutocomplete-noOptions': {
+                        fontStyle: 'italic',
+                        color: '#CCCCCC',
+                        fontSize: 14
                     },
                 },
                 },
@@ -31,13 +38,14 @@ export default function SearchBar({civs}: PreviewProps) {
             inputValue={typed}
             onInputChange={(e, val) => {
                 typedState(val);
+                setOpen(val.length > 0);
             }}
             onChange={(e, chosen) => {
                 if (chosen) {
+                    setOpen(false);
                     navigate(`/leader/overview/${chosen.civ.slug}`);
                 }
             }}
-            open={typed.length > 0}
             sx={{
                 width: 180,
                 '& .MuiAutocomplete-noOptions' : {
@@ -56,20 +64,35 @@ export default function SearchBar({civs}: PreviewProps) {
                     label="Search Civilizations" 
                     variant="standard"
                     sx={{
+                        '& .MuiInputBase-root': {
+                        color: '#FFFFFF',
+                        caretColor: '#FFFFFF',
+                        },
+                        '& input::placeholder': {
+                        color: '#CCCCCC',
+                        opacity: 1,
+                        fontFamily: 'Georgia',
+                        },
                         '& input': {
                             fontFamily: 'Georgia',
                         },
                         '& label': {
                             fontFamily: 'Georgia',
+                            color: '#CCCCCC',
                         },
-                        '& .MuiInput-underline:before': {
-                        borderBottomColor: '#1f1f25',
-                        },
-                        '& .MuiInput-underline:after': {
-                        borderBottomColor: '#c87f4f',
+                        '& .MuiInput-root': {
+                            '&:before': {
+                            borderBottomColor: '#444444',
+                            },
+                            '&:hover:not(.Mui-disabled, .Mui-error):before': {
+                            borderBottomColor: '#888888',
+                            },
+                            '&:after': {
+                            borderBottomColor: '#888888',
+                            },
                         },
                         '& label.Mui-focused': {
-                            color: '#c87f4f',
+                            color: '#FFFFFF',
                         },
                     }}
                 />

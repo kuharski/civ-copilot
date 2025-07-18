@@ -1,5 +1,5 @@
 import { fetchCivPreview, fetchTechs, fetchOptimalOrdering } from '../api/fetch';
-import { CivPreview, Tech, OptimalTechs } from '../utils/types';
+import { CivPreview, Tech } from '../utils/types';
 import Loading from '../components/Loading';
 import SearchBarTechs from '../components/SearchBarTechs';
 import ScenarioInput from '../components/ScenarioInput';
@@ -238,12 +238,11 @@ export default function Prioritizer() {
 
         return(
             <div className="flex flex-col items-center justify-center text-text mb-12">
-                <div className="flex flex-col justify-center items-center">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl mt-12">Your Optimal Tech Path</h1>
-                </div>
-                <div className="flex flex-col justify-center items-center">
-                    <p className="text-base">Ordering: {JSON.stringify(resultTechs)}</p>
-                    <p className="text-base">Targets: {JSON.stringify(resultTargets)}</p>
+                <div className="flex flex-col sm:flex-row justify-center items-center my-12 text-center">
+                <h1 className="text-5xl lg:text-6xl">
+                    <span className="block md:inline">Your Optimal</span>{' '}
+                    <span className="block md:inline pt-1">Tech Paths</span>
+                </h1>
                 </div>
                 <div className="w-[80vw] h-[80vh] rounded-xl border-4 border-[#5b9bd5] overflow-hidden bg-surface">
                     <ReactFlow
@@ -259,11 +258,24 @@ export default function Prioritizer() {
                     >
                     <div className="absolute top-5 left-5 z-10">
                         <button
-                        className="bg-[#434f61] border-4 border-amber-700 hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
+                        className="bg-[#434f61] border-4 border-[#5b9bd5] hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
                         onClick={handleReset}
                         >
                         Return to The Scholar's Table                        
                         </button>
+                    </div>
+                    <div className="absolute top-20 md:top-5 right-5 z-10">
+                    <div
+                    className="bg-[#434f61] border-4 border-[#58ca52] py-2 px-4 rounded-lg shadow transition-none"
+                    >
+                    <p className="font-bold text-center">
+                        Strategic Tech
+                    </p>
+                    <p className="font-bold text-center pb-2">
+                        Tree Targets
+                    </p>
+                    {resultTargets?.map((tech) => (<p className="text-center">{tech}</p>))}
+                    </div>
                     </div>
                     </ReactFlow>                
                 </div>
@@ -294,13 +306,13 @@ export default function Prioritizer() {
                     </p>
                     <p className="text-xl md:text-2xl mt-2">4. Submit Your Plan</p>
                     <p className="text-sm sm:text-base mt-2 text-justify">
-                        Our advisors will craft your optimal tech path.
+                        Our AI advisors will craft your optimal tech paths.
                     </p> 
                 </div>
                 {/* scenario text input */}
                 <ScenarioInput scenario={scenario} setScenario={setScenario} />
                 {/* civ searchbar */}
-                <div className="flex flex-col my-12">
+                <div className="flex flex-col mt-12">
                     {!selectedCiv ? (
                         <div className="relative mx-auto size-40 lg:size-44 group mb-6">
                                 <img src={"/default-civ.png"} alt={"Default Civ"} className="rounded-full relative w-full h-full object-cover drop-shadow-[0_0_12px_rgba(248,198,33,0.8)]" />
@@ -313,9 +325,6 @@ export default function Prioritizer() {
                     <SearchBarTechs civs={civs} selectedCiv={selectedCiv} setSelectedCiv={setSelectedCiv}/>
                 </div>
             </div>
-            <h1 className="mb-12">Selected: {scenario}</h1>
-            <h1 className="mb-12">Selected: {selectedCiv?.leader.name}</h1>
-            <h1 className="mb-12">Selected: {selectedTechs}</h1>
             <div className="w-[80vw] h-[80vh] rounded-xl border-4 border-[#5b9bd5] overflow-hidden bg-surface">
                 <ReactFlow
                     nodes={nodes}

@@ -26,10 +26,13 @@ export default function SearchBarTechs({ civs, selectedCiv, setSelectedCiv }: Se
             slotProps={{
                 paper: {
                 sx: {
-                    '& .MuiAutocomplete-noOptions': {
+                    backgroundColor: '#1f1f25',
+                    color: '#FFFFFF',
                     fontFamily: 'Georgia, serif',
-                    fontStyle: 'italic',
-                    fontSize: 14
+                    '& .MuiAutocomplete-noOptions': {
+                        fontStyle: 'italic',
+                        color: '#CCCCCC',
+                        fontSize: 14
                     },
                 },
                 },
@@ -62,17 +65,32 @@ export default function SearchBarTechs({ civs, selectedCiv, setSelectedCiv }: Se
                     label="Search Civilizations" 
                     variant="standard"
                     sx={{
+                        '& .MuiInputBase-root': {
+                        color: '#FFFFFF',
+                        caretColor: '#FFFFFF',
+                        },
+                        '& input::placeholder': {
+                        color: '#CCCCCC',
+                        opacity: 1,
+                        fontFamily: 'Georgia',
+                        },
                         '& input': {
                             fontFamily: 'Georgia',
                         },
                         '& label': {
                             fontFamily: 'Georgia',
+                            color: '#CCCCCC',
                         },
-                        '& .MuiInput-underline:before': {
-                        borderBottomColor: '#1f1f25',
-                        },
-                        '& .MuiInput-underline:after': {
-                        borderBottomColor: '#5b9bd5',
+                        '& .MuiInput-root': {
+                            '&:before': {
+                            borderBottomColor: '#444444',
+                            },
+                            '&:hover:not(.Mui-disabled, .Mui-error):before': {
+                            borderBottomColor: '#888888',
+                            },
+                            '&:after': {
+                            borderBottomColor: '#888888',
+                            },
                         },
                         '& label.Mui-focused': {
                             color: '#FFFFFF',
