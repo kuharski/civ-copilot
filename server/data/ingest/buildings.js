@@ -45,7 +45,7 @@ export default async function ingestBuildings() {
             }
 
             await Building.updateOne({ "name": buildingDoc.name }, { $set: buildingDoc }, { upsert: true });
-            //console.log(`ingested ${buildingDoc.info}`)
+            console.log(`ingested ${buildingDoc.info}`)
         }
 
     } catch (err) {

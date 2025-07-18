@@ -165,16 +165,14 @@ export function priorityTopoSort(ancestors) {
             readyQueue.enqueue(node);
         }
     }
-    //console.log(readyQueue.toArray());
+
     while (!readyQueue.isEmpty()) {
         // fifo among ties
         const next = readyQueue.dequeue();
 
         (next.postreqs || []).forEach((name) => {
             // update degree of postreq in cpy.graph
-            // console.log(name);
             const postNode = cpy.graph.get(name);
-            // console.log(postNode);
             postNode.degree -= 1;
             if (postNode.degree === 0) {
                 readyQueue.enqueue(postNode);
@@ -189,7 +187,6 @@ export function priorityTopoSort(ancestors) {
 }
 
 export function costCap(cost) {
-    //console.log(`COST GIVEN TO COSTCAP: ${cost}`);
     if (0 <= cost && cost <= 55) { //ancient
         return 175;
     } else if (55 < cost && cost <= 175) { //classical

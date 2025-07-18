@@ -11,8 +11,6 @@ services:
     working_dir: /app
     environment:
       - CHOKIDAR_USEPOLLING=true
-    tty: true
-    stdin_open: true
     depends_on:
       - api
   api:

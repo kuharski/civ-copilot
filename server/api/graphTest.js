@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const base = new techGraph();
-
+// tests written to validate the techGraph class functionality
 async function test(){
 
   try {
@@ -15,16 +15,16 @@ async function test(){
     await base.init();
     console.log('base graph built');
 
-    // console.log("-------------------- \n TESTING BASE \n --------------------");
-    // for (const [key, val] of base.graph) {
-    //   console.log(`${key}. Prereqs: ${val.prereqs} Postreqs: ${val.postreqs} Units: ${JSON.stringify(val.units)}` )
-    // }
+    console.log("-------------------- \n TESTING BASE \n --------------------");
+    for (const [key, val] of base.graph) {
+      console.log(`${key}. Prereqs: ${val.prereqs} Postreqs: ${val.postreqs} Units: ${JSON.stringify(val.units)}` )
+    }
 
-    // console.log("-------------------- \n TESTING CANDIDATE GRAPH \n --------------------");
+    console.log("-------------------- \n TESTING CANDIDATE GRAPH \n --------------------");
     const candidates = techGraph.candidateSubgraph(base, ["Agriculture", "Archery", "Pottery", "Animal Husbandry", "Trapping"], 175);
-    // for (const [key, val] of candidates.graph) {
-    //   console.log(`${key}. Prereqs: ${val.prereqs} Postreqs: ${val.postreqs}`);
-    // }
+    for (const [key, val] of candidates.graph) {
+      console.log(`${key}. Prereqs: ${val.prereqs} Postreqs: ${val.postreqs}`);
+    }
 
     console.log("-------------------- \n TESTING ANCESTOR GRAPH \n --------------------");
     const ancestors = techGraph.ancestorSubgraph(candidates, ["Philosophy", "Construction"]);

@@ -36,6 +36,14 @@ export default function SearchBarTechs({ civs, selectedCiv, setSelectedCiv }: Se
                     },
                 },
                 },
+                clearIndicator: {
+                sx: {
+                    color: '#CCCCCC',
+                    '&:hover': {
+                    color: '#FFFFFF',
+                    },
+                },
+                },
             }}
             getOptionLabel={(option) => option.civ.name}
             isOptionEqualToValue={(option, value) => option.civ.slug === value?.civ.slug}

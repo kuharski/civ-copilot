@@ -176,14 +176,7 @@ app.post('/api/techs', async (req, res) => {
     // generate final ordering
     const finalOrdering = priorityTopoSort(ancestors);
 
-    // // for debugging
-    // // res.json({ "weighted": weighted, "ordered": orderedWeights,
-    // //   "priorities": Array.from(weightedCandidates.graph.values()).map(val => (`name: ${val.name} cost: ${val.cost} weight: ${val.weight} priority: ${val.priority}`)),
-    // //   "targets": targets,
-    // //   "ancestors": Array.from(ancestors.graph).map(([key, node]) => (`${node.name}: post reqs: ${node.postreqs}`)),
-    // //   "ordering": finalOrdering
-    // //  });
-    // console.log(` SERVER SENDING: ${finalOrdering} AND ${targets}`);
+    // console.log(`SERVER SENDING: ${finalOrdering} AND ${targets}`);
     res.status(200).json({ "ordering": finalOrdering, "targets": targets });
 
   } catch (err) {

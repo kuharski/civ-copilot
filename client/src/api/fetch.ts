@@ -27,7 +27,6 @@ export async function fetchTechs(): Promise<Tech[]> {
     return response.data;
 }
 
-
 export async function fetchOptimalOrdering(leader: string, playerScenario: string, techs: string[]): Promise<OptimalTechs> {
     // console.log(`CLIENT SENDING: ${leader} AND ${playerScenario} AND ${techs}`);
     try {
@@ -37,15 +36,12 @@ export async function fetchOptimalOrdering(leader: string, playerScenario: strin
             techs
         });
 
-        // console.log('CLIENT RECEIVED:', response);
-        // console.log('CLIENT RECEIVED DATA:', response.data);
-        
+        // console.log('CLIENT RECEIVED:', response.data);
         return response.data;
     } catch (err: any) {
-        // console.error('FETCH ERROR:', err.message);
         if (err.response) {
-            // console.error('RESPONSE STATUS:', err.response.status);
-            // console.error('RESPONSE DATA:', err.response.data);
+            console.error('RESPONSE STATUS:', err.response.status);
+            console.error('RESPONSE DATA:', err.response.data);
         }
         throw err;
     }

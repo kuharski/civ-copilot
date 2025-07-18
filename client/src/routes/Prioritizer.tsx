@@ -17,12 +17,14 @@ import {
 } from 'reactflow';
 import dagre from 'dagre';
 
+// TechNode from TechCard to style graph nodes
 const nodeTypes = { techNode: TechNode };
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
  
 const nodeWidth = 172;
 const nodeHeight = 36;
 
+// node layout logic with dagre
 const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'LR') => {
     dagreGraph.setGraph({ 
         rankdir: direction, 
@@ -59,6 +61,7 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[], direction = 'LR') => 
     return { nodes: newNodes, edges };
 };
 
+// dfs to build ancestors subgraph when users select a tech
 const ancestors = (start: string, map: Map<string, Tech>): string[] => {
 
     const result: string[] = [];
@@ -77,20 +80,25 @@ const ancestors = (start: string, map: Map<string, Tech>): string[] => {
 }
 
 export default function Prioritizer() {
-
+    // for  civiliation search bar component
     const [civs, civsState] = useState<CivPreview[]>([]);
+    // lifted states submitting in POST to backend
     const [selectedCiv, setSelectedCiv] = useState<CivPreview | null>(null);
     const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
     const [scenario, setScenario] = useState<string>('');
-    const [submitting, setSubmitting] = useState(false);
+    // state containing response from backend
     const [resultTechs, setResultTechs] = useState<string[] | null>(null);
     const [resultTargets, setResultTargets] = useState<string[] | null>(null);
+    // state required for base react flow graph
     const [techs, techState] = useState<Tech[]>([]);
     const [techMap, setTechMap] = useState<Map<string, Tech>>(new Map());
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    // handling loading and submitting of user info
+    const [submitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState<boolean>(true);
 
+    // submission of user info
     const handleSubmit = async () => {
 
         if (!selectedCiv) return;
@@ -99,17 +107,15 @@ export default function Prioritizer() {
 
         try {
             let res = await fetchOptimalOrdering(selectedCiv.leader.name, scenario, selectedTechs);
-            // console.log('RES ORDERING:', res.ordering);
-            // console.log('RES TARGETS:', res.targets);
             setResultTechs(res.ordering);
             setResultTargets(res.targets);
             setSubmitting(false);
         } catch (err) {
-            console.error('submit error:', err);
-            alert('failed to submit plan');
+            alert('Failed to submit your plan.');
         }
     }
 
+    // resetting all state when returning to scholar's table page
     const handleReset = () => {
         setResultTechs(null);
         setResultTargets(null);
@@ -123,7 +129,8 @@ export default function Prioritizer() {
             }))
         );
     };
-    // retrieve data
+
+    // retrieve required data for civ search bar and to create initial react flow graph
     useEffect(() => {
         const getInfo = async () => {
             let civData = await fetchCivPreview();
@@ -140,6 +147,7 @@ export default function Prioritizer() {
         getInfo();
     }, []);
 
+    // handle tech selection state updates and logic
     const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
     setSelectedTechs((prev) => {
         // only select nodes
@@ -158,6 +166,7 @@ export default function Prioritizer() {
     });
     }, [techMap, setNodes]);
 
+    // renders react flow graph and styles nodes based on state. uses dagre layout.
     useEffect(() => {
         const computeGraph = () => {
             if (!loading && techs.length > 0) {
@@ -226,6 +235,7 @@ export default function Prioritizer() {
         computeGraph();
     }, [loading, techs, selectedTechs, resultTechs, resultTargets, setNodes, setEdges]);
 
+    // loading screen
     if(loading || submitting) {
         return(
             <div className="flex flex-col flex-1 items-center justify-center h-full">
@@ -234,6 +244,7 @@ export default function Prioritizer() {
         );
     }
 
+    // displaying optimal tech path results
     if (resultTechs) {
 
         return(
@@ -283,6 +294,7 @@ export default function Prioritizer() {
         );
     }
 
+    // the scholar's table landing page
     return (
         <div className="flex flex-col items-center justify-center text-text mb-12">
             <div className="flex flex-col justify-center items-center">
