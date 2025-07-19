@@ -33,11 +33,11 @@ export default function StrategyCard({ civ }: OverviewProps) {
                 </div>
             </div>
             <h3 className="text-3xl md:text-4xl">Victory Focus</h3>
-            <p className="text-lg md:text-2xl mt-4">Preferred Path</p>
+            <p className="text-lg md:text-2xl mt-4">Preferred Type</p>
             <div className={`px-4 py-1 rounded-full font-semibold text-md md:text-lg mt-4 ${getVictoryStyle(civ.strategy.primaryVictory)}`}>
                 <p className="text-md md:text-lg">{civ.strategy.primaryVictory} Victory</p>
             </div>
-            <p className="text-lg md:text-2xl mt-4">Alternative Path</p>
+            <p className="text-lg md:text-2xl mt-4">Alternative Type</p>
             <div className={`px-4 py-1 rounded-full font-semibold text-md md:text-lg mt-4 ${getVictoryStyle(civ.strategy.secondaryVictory)}`}>
                 <p className="text-md md:text-lg">{civ.strategy.secondaryVictory} Victory</p>
             </div>

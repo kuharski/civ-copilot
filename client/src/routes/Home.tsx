@@ -19,7 +19,7 @@ export default function Home() {
                             />
                         </div>
                     </Link>
-                    <p className="mt-6 text-2xl md:text-4xl text-primary">The Scholar's Table</p>
+                    <p className="mt-6 text-2xl md:text-4xl text-primary">The Scholars Table</p>
                 </div>                
                 <div className="flex flex-col items-center mt-12 lg:mt-24 lg:ml-36">
                     <Link to="/leader/selection">

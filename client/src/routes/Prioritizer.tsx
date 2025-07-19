@@ -115,7 +115,7 @@ export default function Prioritizer() {
         }
     }
 
-    // resetting all state when returning to scholar's table page
+    // resetting all state when returning to scholars table page
     const handleReset = () => {
         setResultTechs(null);
         setResultTargets(null);
@@ -272,7 +272,7 @@ export default function Prioritizer() {
                         className="bg-[#434f61] border-4 border-[#5b9bd5] hover:bg-[#303946] font-semibold py-2 px-4 rounded-lg shadow transition-none"
                         onClick={handleReset}
                         >
-                        Return to The Scholar's Table                        
+                        Return to The Scholars Table                        
                         </button>
                     </div>
                     <div className="absolute top-20 md:top-5 right-5 z-10">
@@ -294,11 +294,11 @@ export default function Prioritizer() {
         );
     }
 
-    // the scholar's table landing page
+    // the scholars table landing page
     return (
         <div className="flex flex-col items-center justify-center text-text mb-12">
             <div className="flex flex-col justify-center items-center">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl mt-12">The Scholar's Table</h1>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl mt-12">The Scholars Table</h1>
             </div>
             <div className="flex flex-col lg:flex-row justify-evenly items-center my-12 w-full">
                 {/* instructions */}
