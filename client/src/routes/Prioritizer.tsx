@@ -109,11 +109,18 @@ export default function Prioritizer() {
             let res = await fetchOptimalOrdering(selectedCiv.leader.name, scenario, selectedTechs);
             setResultTechs(res.ordering);
             setResultTargets(res.targets);
+        } catch (err: any) {
+            if (err.response?.status === 429) {
+                alert(err.response.data?.error);
+            } if (err.response?.status === 400) {
+                alert(err.response.data?.error);
+            } else {
+                alert('Failed to submit your plan.');
+            }
+        } finally {
             setSubmitting(false);
-        } catch (err) {
-            alert('Failed to submit your plan.');
         }
-    }
+    };
 
     // resetting all state when returning to scholars table page
     const handleReset = () => {

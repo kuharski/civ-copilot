@@ -1,7 +1,11 @@
 import express, { json } from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import techsRequestSchema from './validation.js';
 import Civilization from "../models/Civilization.js";
 import Unit from "../models/Unit.js";
 import Building from "../models/Building.js";
@@ -9,10 +13,33 @@ import Tech from "../models/Tech.js";
 import techGraph from './techGraph.js';
 import { costCap, weightAssignment, priorityAssignment, priorityTopoSort } from './ordering.js';
 dotenv.config();
-
 const app = express();
 app.use(express.json()); // parse json request bodies
 app.use(morgan('dev')); // log requests
+app.use(helmet());
+app.use(cors({ origin: 'http://localhost' }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
+const generalLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 min
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api', generalLimiter);
+
+const llmLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 5, // 5 requests per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      error: 'Our AI advisors need a break! Please comeback soon.',
+    });
+  },
+});
 
 const base = new techGraph();
 
@@ -107,10 +134,19 @@ app.get('/api/techs', (req, res) => {
   res.status(200).json(nodeArr);
 });
 
-app.post('/api/techs', async (req, res) => {
+app.post('/api/techs', llmLimiter, async (req, res) => {
+
+  const parsed = techsRequestSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      error: 'Your scenario is too long. Our AI advisors can only read so much!'
+    });
+  }
+
+  const { leader, playerScenario, techs } = parsed.data;
 
   try {
-    const { leader, playerScenario, techs } = req.body;
     // console.log(`SERVER RECEIVED: ${leader} AND ${playerScenario} AND ${techs}`);
     const cpy = new techGraph(base);
 
