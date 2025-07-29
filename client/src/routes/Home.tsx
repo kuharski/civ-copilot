@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 export default function Home() {
 
     return (
-        <div className="flex flex-col items-center justify-center text-text">
+        <div className="flex flex-col items-center justify-center text-text mb-12">
             <h1 className="text-text text-center text-3xl md:text-5xl lg:text-6xl mt-12 mb-2">
                 Your Civ V AI <br /> Strategy Companion
             </h1>

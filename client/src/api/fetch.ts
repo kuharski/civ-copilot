@@ -1,8 +1,9 @@
 import axios from 'axios';
+
 import { Civ, CivPreview, Tech, OptimalTechs } from '../utils/types';
 
 const api = axios.create({
-    baseURL: '/api',
+    baseURL: process.env.REACT_APP_API_URL,
     timeout: 5000,
     headers: { 'Content-Type': 'application/json' }
 });

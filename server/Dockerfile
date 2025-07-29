@@ -1,8 +1,7 @@
 FROM node:22
 WORKDIR /app
 COPY package*.json ./
-RUN npm install -g nodemon
-RUN npm install
+RUN npm ci
 COPY . .
 EXPOSE 3000
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
