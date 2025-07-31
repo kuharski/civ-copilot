@@ -47,3 +47,8 @@ export async function fetchOptimalOrdering(leader: string, playerScenario: strin
         throw err;
     }
 }
+
+export async function fetchPong(): Promise<string> {
+    const response = await api.get('/ping');
+    return response.data;
+}

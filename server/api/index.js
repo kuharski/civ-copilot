@@ -221,5 +221,9 @@ app.post('/api/techs', llmLimiter, async (req, res) => {
   }
 });
 
+app.get('/api/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`server running on http://localhost:${PORT}`));

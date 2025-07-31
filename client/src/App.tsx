@@ -4,9 +4,23 @@ import Selection from './routes/leader/Selection';
 import Overview from './routes/leader/Overview';
 import Prioritizer from './routes/Prioritizer';
 import NotFound from './components/NotFound';
+import WaitingRoom from './components/WaitingRoom';
 import { Route, Routes } from 'react-router';
+import { useEffect, useState } from 'react';
+import { fetchPong } from './api/fetch';
 
 export default function App() {
+
+  const [serverAwake, setServerAwake] = useState(false);
+
+  useEffect(() => {
+    // try to ping backend on load
+      fetchPong()
+      .then(() => setServerAwake(true))
+      .catch(() => setTimeout(() => setServerAwake(true), 60000));
+  }, []);
+
+  if (!serverAwake) return <WaitingRoom />;
 
   return (
     <Routes>
