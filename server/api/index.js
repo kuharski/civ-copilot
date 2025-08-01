@@ -17,7 +17,7 @@ const app = express();
 app.use(express.json()); // parse json request bodies
 app.use(morgan('dev')); // log requests
 app.use(helmet());
-app.use(cors({ origin: 'http://localhost' }));
+app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
 const generalLimiter = rateLimit({
