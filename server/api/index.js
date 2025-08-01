@@ -146,6 +146,22 @@ app.post('/api/techs', llmLimiter, async (req, res) => {
 
   const { leader, playerScenario, techs } = parsed.data;
 
+  if (techs && techs.length >= 79) {
+    if (techs.length === 81) {
+      return res.status(400).json({
+        error: `You've researched everything. Only Future Tech remains.`
+      });
+    } else if (techs.length === 80) {
+      return res.status(400).json({
+        error: `One tech left. The future awaits.`
+      });
+    } else {
+      return res.status(400).json({
+        error: `Two more techs to go. The future is near.`
+      });
+    }
+  }
+
   try {
     // console.log(`SERVER RECEIVED: ${leader} AND ${playerScenario} AND ${techs}`);
     const cpy = new techGraph(base);
