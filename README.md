@@ -1,12 +1,14 @@
 # Civ Copilot
 
-**Civ Copilot** is an AI strategy companion for *Sid Meier’s Civilization V*. Powered by LLM-driven insights, it is designed to make Civilization V more approachable for newcomers, more fun for casual players and seamless for veterans to dive back into. 
+**Civ Copilot** is an AI strategy companion for *Sid Meier’s Civilization V*. Powered by LLM-driven insights, it is designed to make Civilization V more approachable for newcomers, more fun for casual players and seamless for veterans to dive back into.
 
 Civ Copilot helps players streamline their gameplay with two core features:
 
 - **The Scholar's Table**: Personalized, optimal technology paths based on player game state and scenarios
 - **The Hall of Leaders**: Instant, AI-generated strategies, counter-strategies, and victory types for every civilization
-  
+
+**Try Civ Copilot out in your next game @** [**civ-copilot.onrender.com**](https://civ-copilot.onrender.com/).
+
 ---
 
 ## Table of Contents
