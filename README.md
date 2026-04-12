@@ -186,7 +186,7 @@ This step includes prompt engineering to ensure the LLM generates civilization s
 
 ### Generation
 
-The augmented prompt is passed to the LLM (Llama 3.1 8B Instruct via Fireworks.ai), which produces structured output including:
+The augmented prompt is passed to the LLM (Llama 3.3 70B Instruct via Fireworks.ai), which produces structured output including:
 
 - A primary and secondary victory type recommendation
 - Strategy and counter-strategy suggestions
@@ -238,7 +238,7 @@ All outputs are JSON-structured, validated, and persisted in MongoDB for reuse b
 - **Frontend**: React (TypeScript), Tailwind CSS, MUI, React Flow
 - **Backend**: Node.js (JavaScript), Express.js
 - **Database**: MongoDB
-- **AI Integration**: OpenAI SDK with `accounts/fireworks/models/llama-v3p1-8b-instruct`
+- **AI Integration**: OpenAI SDK with `accounts/fireworks/models/llama-v3p3-70b-instruct`
 - **Visualization**: Interactive directed graph layout with `dagre` and React Flow
 - **Containerization**: Docker and Docker Compose for orchestrating services
 
