@@ -51,7 +51,7 @@ export async function weightAssignment(candidates, leaderStrat, playerScenario) 
 
         // Call LLM
         const response = await client.chat.completions.create({
-            "model": "accounts/fireworks/models/gpt-oss-20b",
+            "model": "accounts/fireworks/models/minimax-m2p7",
             "temperature": 0.5,
             "max_tokens": 1024,
             "response_format": {
