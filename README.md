@@ -1,6 +1,6 @@
 # Civ Copilot
 
-**Civ Copilot** is an AI strategy companion for *Sid Meier’s Civilization V*. Powered by LLM-driven insights, it is designed to make Civilization V more approachable for newcomers, more fun for casual players and seamless for veterans to dive back into.
+**Civ Copilot** is an AI strategy companion for *Sid Meier’s Civilization V*. Powered by LLM-driven insights, it is designed to make Civilization V more approachable for newcomers, more fun for casual players and seamless for veterans to dive back into. 
 
 Civ Copilot helps players streamline their gameplay with two core features:
 
@@ -186,7 +186,7 @@ This step includes prompt engineering to ensure the LLM generates civilization s
 
 ### Generation
 
-The augmented prompt is passed to the LLM (OpenAI gpt-oss-20b via Fireworks.ai), which produces structured output including:
+The augmented prompt is passed to the LLM (Kimi K2.6 via Fireworks.ai), which produces structured output including:
 
 - A primary and secondary victory type recommendation
 - Strategy and counter-strategy suggestions
@@ -238,7 +238,7 @@ All outputs are JSON-structured, validated, and persisted in MongoDB for reuse b
 - **Frontend**: React (TypeScript), Tailwind CSS, MUI, React Flow
 - **Backend**: Node.js (JavaScript), Express.js
 - **Database**: MongoDB
-- **AI Integration**: OpenAI SDK with `accounts/fireworks/models/llama-v3p3-70b-instruct`
+- **AI Integration**: OpenAI SDK with `accounts/fireworks/models/kimi-k2p6`
 - **Visualization**: Interactive directed graph layout with `dagre` and React Flow
 - **Containerization**: Docker and Docker Compose for orchestrating services
 
@@ -249,11 +249,12 @@ All outputs are JSON-structured, validated, and persisted in MongoDB for reuse b
 ### Prerequisites
 
 - [Docker & Docker Compose](https://docs.docker.com/compose/install/)
-- A [Fireworks AI API key](accounts/fireworks/models/gpt-oss-20b)
+- A [Fireworks AI API key](https://fireworks.ai/models/fireworks/kimi-k2p6)
 - A `.env` file in `/server` with the following variables:
 ```dotenv
 MONGO_URI=mongodb://mongo:27017/civdb
 FIREWORKS_API_KEY=your_fireworks_key
+AI_API_KEY=your_fireworks_key
 PORT=3000
 ```
 

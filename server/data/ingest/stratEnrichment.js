@@ -16,7 +16,9 @@ export default async function enrichStrats() {
     try {
         const allCivs = await Civilization.find({ "strategy.primaryVictory": null });
         // const civs = allCivs.filter(doc=> doc.civ.name === "Poland" || doc.civ.name === "Portugal" || doc.civ.name === "The Shoshone");
+        console.log(`Found ${allCivs.length} civs to enrich`);
         for (const doc of allCivs) {
+            console.log(`\n--- Processing: ${doc.civ.name} ---`);
 
             const units = [];
             for (const unit of doc.civ.uniqueUnits) {
@@ -60,9 +62,9 @@ export default async function enrichStrats() {
 
             // make call to LLM
             let response = await client.chat.completions.create({
-                "model": "accounts/fireworks/models/llama-v3p1-8b-instruct",
+                "model": "accounts/fireworks/models/kimi-k2p6",
                 "temperature": 0.5,
-                "max_tokens": 500,
+                "max_tokens": 2048,
                 "response_format": {
                     "type": "json_object",
                     "schema": {
@@ -105,15 +107,23 @@ export default async function enrichStrats() {
             let maxRetries = 5;
             while (retries < maxRetries) {
                 try {
-                    strategy = JSON.parse(response.choices[0].message.content);
+                    const rawContent = response.choices[0].message.content;
+                    console.log(`[attempt ${retries + 1}] raw content:`, JSON.stringify(rawContent).slice(0, 300));
+                    strategy = JSON.parse(rawContent);
+                    console.log(`[attempt ${retries + 1}] parsed:`, JSON.stringify(strategy).slice(0, 200));
+                    if (!strategy.primaryVictory || !strategy.secondaryVictory || !strategy.general || !strategy.counter) {
+                        console.log(`[attempt ${retries + 1}] MISSING FIELDS - primaryVictory:${strategy.primaryVictory} secondaryVictory:${strategy.secondaryVictory} general:${!!strategy.general} counter:${!!strategy.counter}`);
+                        throw new Error("missing required fields in strategy response");
+                    }
                     break;
                 } catch (err) {
+                    console.log(`[attempt ${retries + 1}] ERROR:`, err.message);
                     retries++;
                     if (retries < maxRetries) {
                         response = await client.chat.completions.create({
-                            "model": "accounts/fireworks/models/llama-v3p1-8b-instruct",
+                            "model": "accounts/fireworks/models/kimi-k2p6",
                             "temperature": 0.5,
-                            "max_tokens": 500,
+                            "max_tokens": 2048,
                             "response_format": {
                                 "type": "json_object",
                                 "schema": {
