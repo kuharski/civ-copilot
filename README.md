@@ -186,7 +186,7 @@ This step includes prompt engineering to ensure the LLM generates civilization s
 
 ### Generation
 
-The augmented prompt is passed to the LLM (Llama 3.3 70B Instruct via Fireworks.ai), which produces structured output including:
+The augmented prompt is passed to the LLM (OpenAI gpt-oss-20b via Fireworks.ai), which produces structured output including:
 
 - A primary and secondary victory type recommendation
 - Strategy and counter-strategy suggestions
@@ -249,7 +249,7 @@ All outputs are JSON-structured, validated, and persisted in MongoDB for reuse b
 ### Prerequisites
 
 - [Docker & Docker Compose](https://docs.docker.com/compose/install/)
-- A [Fireworks AI API key](https://fireworks.ai/models/fireworks/llama-v3p1-8b-instruct)
+- A [Fireworks AI API key](accounts/fireworks/models/gpt-oss-20b)
 - A `.env` file in `/server` with the following variables:
 ```dotenv
 MONGO_URI=mongodb://mongo:27017/civdb
