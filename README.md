@@ -184,7 +184,7 @@ This step includes prompt engineering to ensure the LLM generates civilization s
 
 ### Generation
 
-The augmented prompt is passed to the LLM (Llama 3.1 8B Instruct via Fireworks.ai), which produces structured output including:
+The augmented prompt is passed to the LLM (Kimi K2.6 via Fireworks.ai), which produces structured output including:
 
 - A primary and secondary victory type recommendation
 - Strategy and counter-strategy suggestions
@@ -236,7 +236,7 @@ All outputs are JSON-structured, validated, and persisted in MongoDB for reuse b
 - **Frontend**: React (TypeScript), Tailwind CSS, MUI, React Flow
 - **Backend**: Node.js (JavaScript), Express.js
 - **Database**: MongoDB
-- **AI Integration**: OpenAI SDK with `accounts/fireworks/models/llama-v3p1-8b-instruct`
+- **AI Integration**: OpenAI SDK with `accounts/fireworks/models/kimi-k2p6`
 - **Visualization**: Interactive directed graph layout with `dagre` and React Flow
 - **Containerization**: Docker and Docker Compose for orchestrating services
 
@@ -247,11 +247,12 @@ All outputs are JSON-structured, validated, and persisted in MongoDB for reuse b
 ### Prerequisites
 
 - [Docker & Docker Compose](https://docs.docker.com/compose/install/)
-- A [Fireworks AI API key](https://fireworks.ai/models/fireworks/llama-v3p1-8b-instruct)
+- A [Fireworks AI API key](https://fireworks.ai/models/fireworks/kimi-k2p6)
 - A `.env` file in `/server` with the following variables:
 ```dotenv
 MONGO_URI=mongodb://mongo:27017/civdb
 FIREWORKS_API_KEY=your_fireworks_key
+AI_API_KEY=your_fireworks_key
 PORT=3000
 ```
 
